@@ -15,12 +15,12 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+  color: #F7F8FA;
 
 }
 body{
   margin: 0 auto;
   width:96%;
-    background-color: #ddd;
+    background-color: #F7F8FA;
 }
 </style>
