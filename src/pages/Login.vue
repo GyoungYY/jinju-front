@@ -45,6 +45,14 @@ export default {
         });
     },
 
+    createUser(){
+        UserInterface.register(this.params).then(data => {
+            this.$message.success('注册成功，请登录');
+        }).catch(reason => {
+            this.$message.error(reason);
+        });
+    },
+
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -59,7 +67,7 @@ export default {
     register(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("submit!");
+          this.createUser();
         } else {
           console.log("error submit!!");
           return false;
