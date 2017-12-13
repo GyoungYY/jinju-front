@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="min-height: 750px;">
         <el-form label-width="100px" class="info-form">
             <el-form-item>
                 <h3 style="color: #f90;margin: 0;">{{joinTime}}入网，在网时长{{diffDay}}</h3>
@@ -72,6 +72,6 @@
 
     .info-form {
         max-width: 600px;
-        margin: 200px auto;
+        margin: 50px auto;
     }
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="min-height: 800px;">
         <el-card class="box-card" v-for="(item,index) in jinjuList" :key="item.index">
             <div slot="header" class="clearfix">
                 <span>卡片名称</span>
@@ -9,6 +9,15 @@
                 {{item.content}}
             </div>
         </el-card>
+
+        <el-pagination
+            background
+            @current-change="handleCurrentChange"
+            :current-page="searchParams.pageIndex"
+            :page-size="searchParams.pageSize"
+            layout="total, prev, pager, next, jumper"
+            :total="total" class="pagination">
+        </el-pagination>
 
     </div>
 </template>
@@ -21,20 +30,30 @@
             return {
                 searchParams: {
                     pageIndex: 1,
-                    pageSize: 10,
+                    pageSize: 2,
                 },
                 jinjuList: [],
+                total: 0,
             };
         },
         mounted() {
-            this.getJinjuList();
+            this.getJinjuList(1);
         },
         methods: {
-            getJinjuList() {
+
+            //获取金句列表
+            getJinjuList(page) {
+                this.searchParams.pageIndex = page;
                 JinjuInterface.getJinjuList(this.searchParams).then(data => {
-                    this.jinjuList = data;
+                    this.jinjuList = data.jinjuList;
+                    this.total = data.total;
                 });
             },
+
+            //切换页数
+            handleCurrentChange(page) {
+                this.getJinjuList(page);
+            }
         }
     };
 </script>
@@ -61,6 +80,11 @@
     .box-card {
         max-width: 1000px;
         margin: 20px auto;
+    }
+
+    .pagination {
+        text-align: center;
+        margin: 20px;
     }
 </style>
 
