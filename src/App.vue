@@ -21,6 +21,6 @@ export default {
 body{
   margin: 0 auto;
   width:96%;
-    background-color: #F7F8FA;
+    background-color: #cf9;
 }
 </style>
