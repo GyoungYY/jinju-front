@@ -35,4 +35,15 @@ export default {
             }
         })
     },
+
+    //更新用户信息
+    updateUser(params) {
+        return fetch.post(API + '/updateUser', params, 'json').then(response => {
+            if (response.code === 0) {
+                return response.message;
+            } else {
+                return Promise.reject(response.message);
+            }
+        })
+    },
 }

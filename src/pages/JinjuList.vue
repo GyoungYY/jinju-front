@@ -30,7 +30,7 @@
             return {
                 searchParams: {
                     pageIndex: 1,
-                    pageSize: 2,
+                    pageSize: 15,
                 },
                 jinjuList: [],
                 total: 0,

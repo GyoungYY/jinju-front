@@ -58,8 +58,13 @@
                 });
             },
 
+            //修改
             updateInfo() {
-
+                UserInterface.updateUser(this.infoDetail).then(data => {
+                    this.$message.success(data);
+                }).catch(reason => {
+                    this.$message.error(reason);
+                });
             },
         }
     }

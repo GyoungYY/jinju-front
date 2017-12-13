@@ -28,7 +28,7 @@ export default {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             }).then(response => response.json());
-        }else{
+        }else if(type === 'json'){
             return fetch(url,{
                 method: 'POST',
                 body: JSON.stringify(data),
