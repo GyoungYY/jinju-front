@@ -16,70 +16,73 @@
 </template>
 
 <script>
-import UserInterface from "@/interface/UserInterface";
+    import UserInterface from "@/interface/UserInterface";
 
-export default {
-  data() {
-    return {
-      params: {
-        username: "",
-        password: ""
-      },
-      rules: {
-        username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
-      }
+    export default {
+        data() {
+            return {
+                params: {
+                    username: "",
+                    password: ""
+                },
+                rules: {
+                    username: [{required: true, message: "请输入用户名", trigger: "blur"}],
+                    password: [{required: true, message: "请输入密码", trigger: "blur"}]
+                }
+            };
+        },
+        methods: {
+
+            //登录接口
+            login() {
+                UserInterface.login(this.params).then(data => {
+                    this.$message.success('报告主人，您已成功登陆～');
+                    console.log(data);
+                    localStorage.setItem('userInfo', JSON.stringify(data));
+                    this.$router.push({path: '/index/jinjuList'});
+                }).catch(reason => {
+                    this.$message.error(reason);
+                });
+            },
+
+            //注册接口
+            createUser() {
+                UserInterface.register(this.params).then(data => {
+                    this.$message.success('注册成功，请登录');
+                }).catch(reason => {
+                    this.$message.error(reason);
+                });
+            },
+
+            //点击登录按钮
+            submitForm(formName) {
+                this.$refs[formName].validate(valid => {
+                    if (valid) {
+                        this.login();
+                    } else {
+                        console.log("error submit!!");
+                        return false;
+                    }
+                });
+            },
+
+            //点击注册按钮
+            register(formName) {
+                this.$refs[formName].validate(valid => {
+                    if (valid) {
+                        this.createUser();
+                    } else {
+                        console.log("error submit!!");
+                        return false;
+                    }
+                });
+            }
+        }
     };
-  },
-  methods: {
-    getUserInfo() {
-      UserInterface.getUserInfo(this.userId).then(data => {});
-    },
-
-    login(){
-        UserInterface.login(this.params).then(data => {
-            console.log(data);
-            this.$router.push({path:'/jinjuList'})
-        }).catch(reason => {
-            this.$message.error(reason);
-        });
-    },
-
-    createUser(){
-        UserInterface.register(this.params).then(data => {
-            this.$message.success('注册成功，请登录');
-        }).catch(reason => {
-            this.$message.error(reason);
-        });
-    },
-
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          this.login();
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
-
-    register(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          this.createUser();
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    }
-  }
-};
 </script>
 
 <style scoped>
-    .login-form{
+    .login-form {
         width: 500px;
         margin: 150px auto;
     }
