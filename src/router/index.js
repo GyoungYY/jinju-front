@@ -6,6 +6,7 @@ import Login from '@/pages/Login'
 import MainNav from '@/pages/MainNav'
 import UserInfo from '@/pages/UserInfo'
 import JinjuList from '@/pages/JinjuList'
+import PublishMain from '@/pages/PublishMain'
 
 Vue.use(Router)
 
@@ -37,7 +38,15 @@ export default new Router({
                     path: 'jinjuList',
                     name: 'JinjuList',
                     component: JinjuList
-                }
+                },
+                {
+                    path: 'publishMain',
+                    name: 'PublishMain',
+                    component: PublishMain,
+                    children: [
+
+                    ]
+                },
             ]
         },
     ]

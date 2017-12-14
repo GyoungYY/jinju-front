@@ -22,7 +22,7 @@
                     </el-dropdown>
                 </li>
                 <li style="float: right">
-                    <el-button type="danger" round icon="el-icon-edit">发表</el-button>
+                    <el-button type="danger" round icon="el-icon-edit" @click="publishClick()">发表</el-button>
                 </li>
             </ul>
         </header>
@@ -60,19 +60,24 @@
             },
 
             //点击头像下拉
-            handleCommand(command){
-                if(command === 'userInfo'){
+            handleCommand(command) {
+                if (command === 'userInfo') {
                     this.$router.push({path: '/index/userInfo'});
-                } else if(command === 'logout'){
+                } else if (command === 'logout') {
                     this.logout();
                 }
             },
 
             //退出登录
-            logout(){
+            logout() {
                 localStorage.removeItem('userInfo');
                 this.$message.success('退出成功');
                 this.$router.push({path: '/login'});
+            },
+
+            //发表
+            publishClick() {
+                this.$router.push({path: '/index/publishMain'});
             }
         }
     }
@@ -80,12 +85,13 @@
 
 <style scoped>
 
-    .main-nav{
-        color: #F7F8FA;
+    .main-nav {
+
     }
 
     header {
         line-height: 60px;
+        color: #F7F8FA;
         background-color: rgb(84, 92, 100);
     }
 
@@ -113,14 +119,17 @@
     }
 
     footer {
+        color: #F7F8FA;
         text-align: center;
         font-size: 14px;
     }
-    footer > div{
+
+    footer > div {
         line-height: 40px;
     }
+
     .toTop {
         background-image: -webkit-linear-gradient(to top, rgb(84, 92, 100), #cf9);
-        background-image: linear-gradient(to top,rgb(84, 92, 100), #cf9);
+        background-image: linear-gradient(to top, rgb(84, 92, 100), #cf9);
     }
 </style>

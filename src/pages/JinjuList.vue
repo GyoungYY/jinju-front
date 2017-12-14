@@ -69,7 +69,7 @@
 <style scoped>
 
     .list-container {
-        min-height: 800px;
+        min-height: 750px;
         max-width: 1000px;
         margin: 20px auto;
     }

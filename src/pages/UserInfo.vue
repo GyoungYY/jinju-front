@@ -26,10 +26,8 @@
 <script>
     import UserInterface from "@/interface/UserInterface";
     import formatTime from "@/common/js/formatTime"
-    import ElForm from "../../node_modules/element-ui/packages/form/src/form.vue";
 
     export default {
-        components: {ElForm},
         data() {
             return {
                 userInfo: JSON.parse(localStorage.getItem('userInfo')),
@@ -73,7 +71,7 @@
 <style scoped>
 
     .user-container {
-        min-height: 800px;
+        min-height: 750px;
         max-width: 1000px;
         margin: 50px auto;
     }
