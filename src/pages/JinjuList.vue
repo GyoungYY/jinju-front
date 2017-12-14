@@ -44,7 +44,7 @@
                 },
                 tagClass: {
                     1: '',
-                    2: 'info',
+                    2: 'success',
                     3: 'danger'
                 }
             };
