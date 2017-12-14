@@ -37,7 +37,7 @@
             }
         },
         mounted() {
-            if(!this.userInfo){
+            if (!this.userInfo) {
                 this.$message.error('亲，先登陆吧～');
                 return;
             }
@@ -58,6 +58,10 @@
 
             //修改
             updateInfo() {
+                if (!this.userInfo) {
+                    this.$message.error('亲，先登陆吧～');
+                    return;
+                }
                 UserInterface.updateUser(this.infoDetail).then(data => {
                     this.$message.success(data);
                 }).catch(reason => {

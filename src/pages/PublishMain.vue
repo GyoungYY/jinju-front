@@ -67,6 +67,10 @@
 
             //立即创建
             submitForm(formName) {
+                if (!this.userInfo) {
+                    this.$message.error('亲，先登陆吧～');
+                    return;
+                }
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         let params = {
@@ -85,6 +89,8 @@
                     }
                 });
             },
+
+            //重置
             resetForm(formName) {
                 this.$refs[formName].resetFields();
             },

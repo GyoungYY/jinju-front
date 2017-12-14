@@ -2,13 +2,14 @@
     <div class="list-container">
         <el-card class="box-card" v-for="(item,index) in jinjuList" :key="item.index">
             <div slot="header">
-                <span>卡片名称</span>
+                <img :src="item.photoUrl" alt="" style="width: 40px;height: 40px;border-radius:20px;">
+                <span class="item-username">{{item.username}}</span>
             </div>
             <div class="item-content">
                 {{item.content}}
             </div>
             <div>
-                <el-tag type="danger" class="item-tag">{{item.typeShow}}</el-tag>
+                <el-tag :type="item.itemTagClass" class="item-tag">{{item.typeShow}}</el-tag>
             </div>
         </el-card>
 
@@ -37,7 +38,14 @@
                 jinjuList: [],
                 total: 0,
                 typeEnum: {
-                    1: '搞笑'
+                    1: '搞笑',
+                    2: '情感',
+                    3: '热点',
+                },
+                tagClass: {
+                    1: '',
+                    2: 'info',
+                    3: 'danger'
                 }
             };
         },
@@ -52,6 +60,8 @@
                 JinjuInterface.getJinjuList(this.searchParams).then(data => {
                     this.jinjuList = data.jinjuList.map(item => {
                         item.typeShow = this.typeEnum[item.type];
+                        item.itemTagClass = this.tagClass[item.type];
+                        item.photoUrl = '../../static/img/photo' + item.user_id % 4 + '.jpeg';
                         return item;
                     });
                     this.total = data.total;
@@ -78,7 +88,14 @@
         margin-bottom: 20px;
     }
 
-    .item-content{
+    .item-username {
+        font-size: 16px;
+        font-weight: bold;
+        color: #f90;
+        padding-left: 8px;
+    }
+
+    .item-content {
         margin-bottom: 18px;
         font-size: 14px;
         line-height: 24px;
