@@ -25,7 +25,6 @@ let timeUtils = {
         if (second < 10) {
             second = "0" + second;
         }
-        console.log(year + "-" + month + "-" + date + " " + hour + ":" + minute);
         return year + "年" + month + "月" + date + "日" + hour + ":" + minute;
     },
 

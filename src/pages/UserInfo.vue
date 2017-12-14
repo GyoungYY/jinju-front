@@ -1,8 +1,8 @@
 <template>
-    <div style="min-height: 750px;">
+    <div class="user-container">
         <el-form label-width="100px" class="info-form">
             <el-form-item>
-                <h3 style="color: #f90;margin: 0;">{{joinTime}}入网，在网时长{{diffDay}}</h3>
+                <h4 style="color: #f90;margin: 0;">{{joinTime}}入网，在网时长{{diffDay}}</h4>
             </el-form-item>
             <el-form-item label="用户名">
                 <el-input v-model="infoDetail.username"></el-input>
@@ -71,12 +71,19 @@
 </script>
 
 <style scoped>
+
+    .user-container {
+        min-height: 800px;
+        max-width: 1000px;
+        margin: 50px auto;
+    }
+
     .info-form > label {
         color: #f90;
     }
 
     .info-form {
         max-width: 600px;
-        margin: 50px auto;
+        margin: auto;
     }
 </style>

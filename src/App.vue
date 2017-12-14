@@ -15,12 +15,13 @@
         font-family: 'Avenir', Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        color: #F7F8FA;
-
     }
 
     body {
         margin: 0 auto;
+        color: #333;
         background-color: #cf9;
+        background-color: #fff;
+        background-color: #e8e8e8;
     }
 </style>

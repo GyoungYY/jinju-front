@@ -1,12 +1,14 @@
 <template>
-    <div style="min-height: 800px;">
+    <div class="list-container">
         <el-card class="box-card" v-for="(item,index) in jinjuList" :key="item.index">
-            <div slot="header" class="clearfix">
+            <div slot="header">
                 <span>卡片名称</span>
-                <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
             </div>
-            <div class="text item">
+            <div class="item-content">
                 {{item.content}}
+            </div>
+            <div>
+                <el-tag type="danger" class="item-tag">{{item.typeShow}}</el-tag>
             </div>
         </el-card>
 
@@ -34,6 +36,9 @@
                 },
                 jinjuList: [],
                 total: 0,
+                typeEnum: {
+                    1: '搞笑'
+                }
             };
         },
         mounted() {
@@ -45,7 +50,10 @@
             getJinjuList(page) {
                 this.searchParams.pageIndex = page;
                 JinjuInterface.getJinjuList(this.searchParams).then(data => {
-                    this.jinjuList = data.jinjuList;
+                    this.jinjuList = data.jinjuList.map(item => {
+                        item.typeShow = this.typeEnum[item.type];
+                        return item;
+                    });
                     this.total = data.total;
                 });
             },
@@ -59,32 +67,33 @@
 </script>
 
 <style scoped>
-    .text {
-        font-size: 14px;
-    }
 
-    .item {
-        margin-bottom: 18px;
-    }
-
-    .clearfix:before,
-    .clearfix:after {
-        display: table;
-        content: "";
-    }
-
-    .clearfix:after {
-        clear: both;
+    .list-container {
+        min-height: 800px;
+        max-width: 1000px;
+        margin: 20px auto;
     }
 
     .box-card {
-        max-width: 1000px;
-        margin: 20px auto;
+        margin-bottom: 20px;
+    }
+
+    .item-content{
+        margin-bottom: 18px;
+        font-size: 14px;
+        line-height: 24px;
+    }
+
+    .item-tag {
+        padding: 0 15px;
+        line-height: 26px;
+        height: 28px;
     }
 
     .pagination {
         text-align: center;
         margin: 20px;
+        width: 100%;
     }
 </style>
 

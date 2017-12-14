@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="main-nav">
         <header>
             <ul>
                 <li @click="handleSelect('index')">
@@ -7,6 +7,8 @@
                     <span style="padding: 0 10px; font-size: 20px;">金句猫</span>
                 </li>
                 <li class="active-tag" @click="handleSelect('index')">首页</li>
+
+
                 <li style="float: right">
                     <el-dropdown @command="handleCommand">
                         <span class="el-dropdown-link" style="color: #f90">
@@ -19,6 +21,9 @@
                         </el-dropdown-menu>
                     </el-dropdown>
                 </li>
+                <li style="float: right">
+                    <el-button type="danger" round icon="el-icon-edit">发表</el-button>
+                </li>
             </ul>
         </header>
         <router-view/>
@@ -28,7 +33,10 @@
                 <span>联系方式</span>
             </div>
             <div>
-                <span>©2017 Design & Development by aguang</span>
+                <span>©2017 Designed & Developed by aguang</span>
+            </div>
+            <div>
+                <span>金句猫 - 最专业、最内涵的短句子平台</span>
             </div>
         </footer>
     </div>
@@ -71,6 +79,11 @@
 </script>
 
 <style scoped>
+
+    .main-nav{
+        color: #F7F8FA;
+    }
+
     header {
         line-height: 60px;
         background-color: rgb(84, 92, 100);
