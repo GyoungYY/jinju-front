@@ -16,7 +16,7 @@ export default new Router({
             path: '/',
             name: 'Login',
             component: Login,
-            redirect: '/login'
+            redirect: '/index/jinjuList'
         },
         {
             path: '/login',
