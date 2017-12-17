@@ -10,6 +10,8 @@
             </div>
             <div>
                 <el-tag :type="item.itemTagClass" class="item-tag">{{item.typeShow}}</el-tag>
+                <span class="glyphicon glyphicon-thumbs-down" style="float:right">100</span>
+                <span class="glyphicon glyphicon-thumbs-up" style="float:right;padding-right:20px;">200</span>
             </div>
         </el-card>
 
