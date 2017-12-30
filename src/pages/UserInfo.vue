@@ -47,7 +47,7 @@
 
             //获取用户信息
             getUserInfo() {
-                UserInterface.getUserInfo(this.userInfo.user_id).then(data => {
+                UserInterface.getUserInfo(this.userInfo.userId).then(data => {
                     this.infoDetail = data;
                     this.joinTime = formatTime.getLocalTime(this.infoDetail.create_time);
                     this.diffDay = formatTime.getDiffDay(this.infoDetail.create_time);

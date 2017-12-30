@@ -5,7 +5,7 @@ const API = '/api';
 export default {
     //获取用户信息
     getUserInfo(id) {
-        return fetch.get(API + '/getUser/' + id).then(response => {
+        return fetch.get(API + '/user/' + id).then(response => {
             if (response.code === 0) {
                 return response.data;
             } else {
@@ -16,7 +16,7 @@ export default {
 
     //登录
     login(params) {
-        return fetch.post(API + '/login', params).then(response => {
+        return fetch.post(API + '/user/login', params).then(response => {
             if (response.code === 0) {
                 return response.data;
             } else {
@@ -27,7 +27,7 @@ export default {
 
     //注册
     register(params) {
-        return fetch.post(API + '/createUser', params).then(response => {
+        return fetch.post(API + '/user/create', params).then(response => {
             if (response.code === 0) {
                 return response.data;
             } else {
@@ -38,7 +38,7 @@ export default {
 
     //更新用户信息
     updateUser(params) {
-        return fetch.post(API + '/updateUser', params, 'json').then(response => {
+        return fetch.post(API + '/user/update', params, 'json').then(response => {
             if (response.code === 0) {
                 return response.message;
             } else {

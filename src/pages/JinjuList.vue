@@ -5,13 +5,20 @@
                 <img :src="item.photoUrl" alt="" style="width: 40px;height: 40px;border-radius:20px;">
                 <span class="item-username">{{item.username}}</span>
             </div>
-            <div class="item-content">
+            <div class="item-content" @click="gotoDetail(item.jinjuId)">
                 {{item.content}}
             </div>
             <div>
                 <el-tag :type="item.itemTagClass" class="item-tag">{{item.typeShow}}</el-tag>
-                <span class="glyphicon glyphicon-thumbs-down" style="float:right">100</span>
-                <span class="glyphicon glyphicon-thumbs-up" style="float:right;padding-right:20px;">200</span>
+                <span :class="{'clicked': item.isCollect}" class="glyphicon glyphicon-star" style="float:right;">
+                    <span style="padding:0 10px;">{{item.collectCount}}</span>
+                </span>
+                <span :class="{'clicked': item.upOrDownVote === 2}" class="glyphicon glyphicon-thumbs-down" style="float:right;padding-right:10px;">
+                    <span style="padding:0 10px;">{{item.downVoteCount}}</span>
+                </span>
+                <span :class="{'clicked': item.upOrDownVote === 1}" class="glyphicon glyphicon-thumbs-up" style="float:right;padding-right:10px;">
+                    <span style="padding:0 10px;">{{item.upVoteCount}}</span>
+                </span>
             </div>
         </el-card>
 
@@ -60,10 +67,10 @@
             getJinjuList(page) {
                 this.searchParams.pageIndex = page;
                 JinjuInterface.getJinjuList(this.searchParams).then(data => {
-                    this.jinjuList = data.jinjuList.map(item => {
+                    this.jinjuList = data.list.map(item => {
                         item.typeShow = this.typeEnum[item.type];
                         item.itemTagClass = this.tagClass[item.type];
-                        item.photoUrl = '../../static/img/photo' + item.user_id % 4 + '.jpeg';
+                        item.photoUrl = '../../static/img/photo' + item.userId % 4 + '.jpeg';
                         return item;
                     });
                     this.total = data.total;
@@ -73,6 +80,11 @@
             //切换页数
             handleCurrentChange(page) {
                 this.getJinjuList(page);
+            },
+
+            //进入金句详情
+            gotoDetail(id){
+                this.$router.push({path: '/index/JinjuDetail/' + id});
             }
         }
     };
@@ -113,6 +125,10 @@
         text-align: center;
         margin: 20px;
         width: 100%;
+    }
+
+    .clicked{
+        color: #fa5555;
     }
 </style>
 

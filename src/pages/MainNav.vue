@@ -29,11 +29,11 @@
         <router-view/>
         <footer class="toTop">
             <div>
-                <span>关于我们</span>
+                <span @click="gotoAboutPage()" style="cursor:pointer;">关于我们</span>
                 <span>联系方式</span>
             </div>
             <div>
-                <span>©2017 Designed & Developed by aguang</span>
+                <span>©2017 Designed & Developed by aguang & likai</span>
             </div>
             <div>
                 <span>金句猫 - 最专业、最内涵的短句子平台</span>
@@ -78,7 +78,12 @@
             //发表
             publishClick() {
                 this.$router.push({path: '/index/publishMain'});
-            }
+            },
+
+            //进入关于页面
+            gotoAboutPage(index){
+                this.$router.push({path: '/index/AboutUsNav/AboutUsPage'});
+            },
         }
     }
 </script>
