@@ -35,101 +35,104 @@
 </template>
 
 <script>
-    import JinjuInterface from "@/interface/JinjuInterface";
+import JinjuInterface from "@/interface/JinjuInterface";
+import scrollFunc from "@/common/js/scrollFunc"
 
-    export default {
-        data() {
-            return {
-                searchParams: {
-                    pageIndex: 1,
-                    pageSize: 15,
-                },
-                jinjuList: [],
-                total: 0,
-                typeEnum: {
-                    1: '搞笑',
-                    2: '情感',
-                    3: '热点',
-                },
-                tagClass: {
-                    1: '',
-                    2: 'success',
-                    3: 'danger'
-                }
-            };
-        },
-        mounted() {
-            this.getJinjuList(1);
-        },
-        methods: {
+let timer = null;
 
-            //获取金句列表
-            getJinjuList(page) {
-                this.searchParams.pageIndex = page;
-                JinjuInterface.getJinjuList(this.searchParams).then(data => {
-                    this.jinjuList = data.list.map(item => {
-                        item.typeShow = this.typeEnum[item.type];
-                        item.itemTagClass = this.tagClass[item.type];
-                        item.photoUrl = '../../static/img/photo' + item.userId % 4 + '.jpeg';
-                        return item;
-                    });
-                    this.total = data.total;
-                });
-            },
-
-            //切换页数
-            handleCurrentChange(page) {
-                this.getJinjuList(page);
-            },
-
-            //进入金句详情
-            gotoDetail(id){
-                this.$router.push({path: '/index/JinjuDetail/' + id});
-            }
-        }
+export default {
+  data() {
+    return {
+      searchParams: {
+        pageIndex: 1,
+        pageSize: 15
+      },
+      jinjuList: [],
+      total: 0,
+      typeEnum: {
+        1: "搞笑",
+        2: "情感",
+        3: "热点"
+      },
+      tagClass: {
+        1: "",
+        2: "success",
+        3: "danger"
+      }
     };
+  },
+  mounted() {
+    this.getJinjuList(1);
+  },
+  methods: {
+    //获取金句列表
+    getJinjuList(page) {
+      this.searchParams.pageIndex = page;
+      JinjuInterface.getJinjuList(this.searchParams).then(data => {
+        this.jinjuList = data.list.map(item => {
+          item.typeShow = this.typeEnum[item.type];
+          item.itemTagClass = this.tagClass[item.type];
+          item.photoUrl = "../../static/img/photo" + item.userId % 4 + ".jpeg";
+          return item;
+        });
+        this.total = data.total;
+      });
+    },
+
+    //切换页数
+    handleCurrentChange(page) {
+      this.getJinjuList(page);
+        scrollFunc.gotoTop();
+    },
+
+    //进入金句详情
+    gotoDetail(id) {
+      this.$router.push({ path: "/index/JinjuDetail/" + id });
+    },
+    
+  }
+};
 </script>
 
 <style scoped>
+.list-container {
+  min-height: 750px;
+  max-width: 1000px;
+  margin: 20px auto;
+}
 
-    .list-container {
-        min-height: 750px;
-        max-width: 1000px;
-        margin: 20px auto;
-    }
+.box-card {
+  margin-bottom: 20px;
+}
 
-    .box-card {
-        margin-bottom: 20px;
-    }
+.item-username {
+  font-size: 16px;
+  font-weight: bold;
+  color: #f90;
+  padding-left: 8px;
+}
 
-    .item-username {
-        font-size: 16px;
-        font-weight: bold;
-        color: #f90;
-        padding-left: 8px;
-    }
+.item-content {
+  margin-bottom: 18px;
+  font-size: 14px;
+  line-height: 24px;
+}
 
-    .item-content {
-        margin-bottom: 18px;
-        font-size: 14px;
-        line-height: 24px;
-    }
+.item-tag {
+  padding: 0 15px;
+  line-height: 26px;
+  height: 28px;
+}
 
-    .item-tag {
-        padding: 0 15px;
-        line-height: 26px;
-        height: 28px;
-    }
+.pagination {
+  text-align: center;
+  margin: 20px;
+  width: 100%;
+}
 
-    .pagination {
-        text-align: center;
-        margin: 20px;
-        width: 100%;
-    }
-
-    .clicked{
-        color: #fa5555;
-    }
+.clicked {
+  color: #fa5555;
+}
 </style>
 
 

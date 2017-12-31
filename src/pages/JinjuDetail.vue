@@ -93,6 +93,7 @@ export default {
   },
   mounted() {
     this.getJinjuDetail(this.$route.params.id);
+    scrollTo(0,0);
     // this.getCommentList(1);
   },
   methods: {
