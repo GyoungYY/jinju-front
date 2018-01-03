@@ -37,7 +37,7 @@
     export default {
         data() {
             return {
-                userInfo: JSON.parse(localStorage.getItem('userInfo')),
+                userInfo: JSON.parse(sessionStorage.getItem('userInfo')),
                 activeName: 'jinju',
                 ruleForm: {
                     type: '',

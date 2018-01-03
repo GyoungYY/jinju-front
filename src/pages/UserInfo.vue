@@ -2,7 +2,7 @@
     <div class="user-container">
         <el-form label-width="100px" class="info-form">
             <el-form-item>
-                <h4 style="color: #f90;margin: 0;">{{joinTime}}入网，在网时长{{diffDay}}</h4>
+                <h4 style="color: #f90;margin: 0;">{{joinTime}}入网，在网时长{{diffDay || '0小时'}}</h4>
             </el-form-item>
             <el-form-item label="用户名">
                 <el-input v-model="infoDetail.username"></el-input>
@@ -30,7 +30,7 @@
     export default {
         data() {
             return {
-                userInfo: JSON.parse(localStorage.getItem('userInfo')),
+                userInfo: JSON.parse(sessionStorage.getItem('userInfo')),
                 infoDetail: {},
                 joinTime: '',
                 diffDay: '',
@@ -49,8 +49,8 @@
             getUserInfo() {
                 UserInterface.getUserInfo(this.userInfo.userId).then(data => {
                     this.infoDetail = data;
-                    this.joinTime = formatTime.getLocalTime(this.infoDetail.create_time);
-                    this.diffDay = formatTime.getDiffDay(this.infoDetail.create_time);
+                    this.joinTime = formatTime.getLocalTime(this.infoDetail.createTime);
+                    this.diffDay = formatTime.getDiffDay(this.infoDetail.createTime);
                 }).catch(reason => {
                     this.$message.error(reason);
                 });

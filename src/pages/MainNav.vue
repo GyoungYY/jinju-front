@@ -9,7 +9,7 @@
                 <li class="active-tag" @click="handleSelect('index')">首页</li>
 
 
-                <li style="float: right">
+                <li style="float: right" v-if="isLogined">
                     <el-dropdown @command="handleCommand">
                         <span class="el-dropdown-link" style="color: #f90">
                             头像
@@ -21,7 +21,10 @@
                         </el-dropdown-menu>
                     </el-dropdown>
                 </li>
-                <li style="float: right">
+                <li style="float: right;padding-left:0;" v-if="!isLogined">
+                    <el-button type="success" round @click="gotoLogin()">登录/注册</el-button>
+                </li>
+                <li style="float: right" v-if="isLogined">
                     <el-button type="danger" round icon="el-icon-edit" @click="publishClick()">发表</el-button>
                 </li>
             </ul>
@@ -43,10 +46,19 @@
 </template>
 
 <script>
+    import UserInterface from "@/interface/UserInterface";
+
     export default {
         data() {
             return {
+                userInfo: JSON.parse(sessionStorage.getItem('userInfo')),
                 activeIndex: sessionStorage.getItem('tabActive') || 'index',
+                isLogined: false,
+            }
+        },
+        mounted() {
+            if (this.userInfo) {
+                this.isLogined = true;
             }
         },
         methods: {
@@ -70,9 +82,13 @@
 
             //退出登录
             logout() {
-                localStorage.removeItem('userInfo');
-                this.$message.success('退出成功');
+                sessionStorage.removeItem('userInfo');
+                UserInterface.logout(this.userInfo.userId).then(data => {
+                    this.$message.success('退出成功');
                 this.$router.push({path: '/login'});
+                }).catch(reason => {
+                    this.$message.error(reason);
+                });
             },
 
             //发表
@@ -83,6 +99,11 @@
             //进入关于页面
             gotoAboutPage(index){
                 this.$router.push({path: '/index/AboutUsNav/AboutUsPage'});
+            },
+
+            //登录/注册
+            gotoLogin(){
+                this.$router.push({path: '/login'});
             },
         }
     }

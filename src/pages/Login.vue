@@ -57,7 +57,7 @@
             login() {
                 UserInterface.login(this.params).then(data => {
                     this.$message.success('报告主人，您已成功登陆～');
-                    localStorage.setItem('userInfo', JSON.stringify(data));
+                    sessionStorage.setItem('userInfo', JSON.stringify(data));
                     this.$router.push({path: '/index/jinjuList'});
                 }).catch(reason => {
                     this.$message.error(reason);

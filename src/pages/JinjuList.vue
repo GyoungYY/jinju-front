@@ -116,6 +116,7 @@ export default {
   margin-bottom: 18px;
   font-size: 14px;
   line-height: 24px;
+  cursor: pointer;
 }
 
 .item-tag {
