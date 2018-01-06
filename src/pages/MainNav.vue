@@ -30,17 +30,35 @@
             </ul>
         </header>
         <router-view/>
-        <footer class="toTop">
-            <div>
-                <span @click="gotoAboutPage()" style="cursor:pointer;">关于我们</span>
-                <span>联系方式</span>
+        <footer>
+            <div class="footer-container">
+                <div class="footer-info">
+                    <div style="font-size: 20px;margin-bottom:10px;">金句猫 - 最专业、最内涵的短句子平台</div>
+                    <div>
+                        微信：www_jinjumao_club
+                        <el-button type="primary" size="small">关注</el-button>
+                    </div>
+                    <div>
+                        微博：金句猫
+                        <el-button type="primary" size="small" @click="concernWeibo()">关注</el-button>
+                    </div>
+                </div>
+
+                <div class="footer-link">
+                    <div>
+                        <span @click="gotoAboutPage()" style="cursor:pointer;padding-right: 6px;">关于我们</span>
+                        <span style="cursor:pointer;padding-right: 6px;">联系方式</span>
+                        <span style="cursor:pointer;padding-right: 6px;">意见反馈</span>
+                        <span style="cursor:pointer;padding-right: 6px;">友情链接</span>
+                    </div>
+                    <div>
+                        <span>金句猫 ©2017 Designed & Developed by aguang & likai</span>
+                    </div>
+                </div>
+
+                <div style="clear:both;"></div> 
             </div>
-            <div>
-                <span>©2017 Designed & Developed by aguang & likai</span>
-            </div>
-            <div>
-                <span>金句猫 - 最专业、最内涵的短句子平台</span>
-            </div>
+
         </footer>
     </div>
 </template>
@@ -105,6 +123,10 @@
             gotoLogin(){
                 this.$router.push({path: '/login'});
             },
+
+            concernWeibo(){
+                window.open('https://weibo.com/6432902837');
+            }
         }
     }
 </script>
@@ -146,16 +168,28 @@
 
     footer {
         color: #F7F8FA;
-        text-align: center;
-        font-size: 14px;
+        background-color: rgb(84, 92, 100);
+        /* background-image: -webkit-linear-gradient(to top, rgb(84, 92, 100), #cf9);
+        background-image: linear-gradient(to top, rgb(84, 92, 100), #cf9); */
     }
 
-    footer > div {
+    .footer-container {
+        width: 1000px;
+        margin: auto;
+        padding: 16px 0;
         line-height: 40px;
     }
 
-    .toTop {
-        background-image: -webkit-linear-gradient(to top, rgb(84, 92, 100), #cf9);
-        background-image: linear-gradient(to top, rgb(84, 92, 100), #cf9);
+    .footer-info{
+        width: 400px;
+        margin: 0 20px 0 60px;
+        float:left;
+        border-right: 1px solid #ddd;
+    }
+
+    .footer-link{
+        width: 400px;
+        margin: 0 20px;
+        float:left;
     }
 </style>
