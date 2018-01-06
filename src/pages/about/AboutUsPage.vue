@@ -1,5 +1,5 @@
 <template>
-    <div style="padding: 10px;">
+    <div class="right-container">
         <h3>金句猫，最专业、最内涵的短句子平台</h3>
     </div>
 </template>
@@ -14,6 +14,11 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+    .right-container{
+        background-color: #fff;
+        margin-left: 10px;
+        min-height: 700px;
+        padding: 10px;
+    }
 </style>

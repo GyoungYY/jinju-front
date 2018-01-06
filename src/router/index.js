@@ -8,8 +8,12 @@ import UserInfo from '@/pages/UserInfo'
 import JinjuList from '@/pages/JinjuList'
 import JinjuDetail from '@/pages/JinjuDetail'
 import PublishMain from '@/pages/PublishMain'
-import AboutUsNav from '@/pages/AboutUsNav'
-import AboutUsPage from '@/pages/AboutUsPage'
+
+import AboutUsNav from '@/pages/about/AboutUsNav'
+import AboutUsPage from '@/pages/about/AboutUsPage'
+import ContactUs from '@/pages/about/ContactUs'
+import FeedBack from '@/pages/about/FeedBack'
+import FriendLink from '@/pages/about/FriendLink'
 
 Vue.use(Router)
 
@@ -64,7 +68,22 @@ export default new Router({
                             path: 'AboutUsPage',
                             name: 'AboutUsPage',
                             component: AboutUsPage
-                        }
+                        },
+                        {
+                            path: 'ContactUs',
+                            name: 'ContactUs',
+                            component: ContactUs
+                        },
+                        {
+                            path: 'FeedBack',
+                            name: 'FeedBack',
+                            component: FeedBack
+                        },
+                        {
+                            path: 'FriendLink',
+                            name: 'FriendLink',
+                            component: FriendLink
+                        },
                     ]
                 },
             ]

@@ -46,10 +46,10 @@
 
                 <div class="footer-link">
                     <div>
-                        <span @click="gotoAboutPage()" style="cursor:pointer;padding-right: 6px;">关于我们</span>
-                        <span style="cursor:pointer;padding-right: 6px;">联系方式</span>
-                        <span style="cursor:pointer;padding-right: 6px;">意见反馈</span>
-                        <span style="cursor:pointer;padding-right: 6px;">友情链接</span>
+                        <span @click="gotoAboutPage('about')" style="cursor:pointer;padding-right: 6px;">关于我们</span>
+                        <span @click="gotoAboutPage('contact')" style="cursor:pointer;padding-right: 6px;">联系方式</span>
+                        <span @click="gotoAboutPage('message')" style="cursor:pointer;padding-right: 6px;">意见反馈</span>
+                        <span @click="gotoAboutPage('friend')" style="cursor:pointer;padding-right: 6px;">友情链接</span>
                     </div>
                     <div>
                         <span>金句猫 ©2017 Designed & Developed by aguang & likai</span>
@@ -116,7 +116,16 @@
 
             //进入关于页面
             gotoAboutPage(index){
-                this.$router.push({path: '/index/AboutUsNav/AboutUsPage'});
+                if(index === 'about'){
+                    this.$router.push({path: '/index/AboutUsNav/AboutUsPage'});
+                } else if(index === 'contact'){
+                    this.$router.push({path: '/index/AboutUsNav/ContactUs'});
+                } else if(index === 'message'){
+                    this.$router.push({path: '/index/AboutUsNav/FeedBack'});
+                } else if(index === 'friend'){
+                    this.$router.push({path: '/index/AboutUsNav/FriendLink'});
+                }
+                
             },
 
             //登录/注册
