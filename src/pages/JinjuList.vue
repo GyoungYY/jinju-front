@@ -10,13 +10,13 @@
             </div>
             <div>
                 <el-tag :type="item.itemTagClass" class="item-tag">{{item.typeShow}}</el-tag>
-                <span :class="{'clicked': item.isCollect}" class="glyphicon glyphicon-star" style="float:right;">
+                <span :class="{'clicked': item.isCollect}" class="glyphicon glyphicon-star" style="float:right;cursor:pointer;" @click="collectClick(item)">
                     <span style="padding:0 10px;">{{item.collectCount}}</span>
                 </span>
-                <span :class="{'clicked': item.upOrDownVote === 2}" class="glyphicon glyphicon-thumbs-down" style="float:right;padding-right:10px;">
+                <span :class="{'clicked': item.upOrDownVote === 2}" class="glyphicon glyphicon-thumbs-down" style="float:right;padding-right:10px;cursor:pointer;" @click="downVoteClick(item)">
                     <span style="padding:0 10px;">{{item.downVoteCount}}</span>
                 </span>
-                <span :class="{'clicked': item.upOrDownVote === 1}" class="glyphicon glyphicon-thumbs-up" style="float:right;padding-right:10px;">
+                <span :class="{'clicked': item.upOrDownVote === 1}" class="glyphicon glyphicon-thumbs-up" style="float:right;padding-right:10px;cursor:pointer;" @click="upVoteClick(item)">
                     <span style="padding:0 10px;">{{item.upVoteCount}}</span>
                 </span>
             </div>
@@ -88,6 +88,65 @@ export default {
     //进入金句详情
     gotoDetail(id) {
       this.$router.push({ path: "/index/JinjuDetail/" + id });
+    },
+
+    //点击赞按钮
+    upVoteClick(item){
+        let type = item.upOrDownVote === 1 ? 2 : 1;   //1赞，2取消
+        JinjuInterface.upVote(item.jinjuId,type).then(data => {
+            this.$message.success(data);
+            if(type === 1 && item.upOrDownVote!=2){
+                item.upVoteCount += 1;
+                item.upOrDownVote = 1;
+            } else if(type === 1 && item.upOrDownVote ==2){
+                item.upVoteCount += 1;
+                item.downVoteCount -= 1;
+                item.upOrDownVote = 1;
+            } else if(type === 2){
+                item.upVoteCount -= 1;
+                item.upOrDownVote = '';
+            }
+        }).catch(reason =>{
+            this.$message.error(reason);
+        });
+    },
+
+    //点击踩按钮
+    downVoteClick(item){
+        let type = item.upOrDownVote === 2 ? 2 : 1;   //1踩，2取消
+        JinjuInterface.downVote(item.jinjuId,type).then(data => {
+            this.$message.success(data);
+            if(type === 1 && item.upOrDownVote!=1){
+                item.downVoteCount += 1;
+                item.upOrDownVote = 2;
+            } else if(type === 1 && item.upOrDownVote==1){
+                item.downVoteCount += 1;
+                item.upVoteCount -= 1;
+                item.upOrDownVote = 2;
+            } else if(type === 2){
+                item.downVoteCount -= 1;
+                item.upOrDownVote = '';
+            }
+        }).catch(reason =>{
+            this.$message.error(reason);
+        });
+    },
+
+    //点击收藏
+    collectClick(item) {
+      let type = item.isCollect ? 2 : 1;   //1收藏，2取消
+        JinjuInterface.collect(item.jinjuId,type).then(data => {
+            this.$message.success(data);
+            if(type === 1){
+                item.collectCount += 1;
+                item.isCollect = true;
+            } else if(type === 2){
+                item.collectCount -= 1;
+                item.isCollect = false;
+            }
+        }).catch(reason =>{
+            this.$message.error(reason);
+        });
     },
     
   }

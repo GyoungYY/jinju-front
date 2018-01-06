@@ -77,7 +77,9 @@
     .user-container {
         min-height: 750px;
         max-width: 1000px;
-        margin: 50px auto;
+        margin: 20px auto;
+        padding: 50px 0;
+        background-color: #fff;
     }
 
     .info-form > label {
