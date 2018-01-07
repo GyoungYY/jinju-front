@@ -15,8 +15,11 @@
             </div>
             <div>
                 <el-tag :type="item.itemTagClass" class="item-tag">{{item.typeShow}}</el-tag>
-                <span :class="{'clicked': item.isCollect}" class="glyphicon glyphicon-star" style="float:right;cursor:pointer;" @click="collectClick(item)">
+                <span :class="{'clicked': item.isCollect}" class="glyphicon glyphicon-star-empty" style="float:right;cursor:pointer;" @click="collectClick(item)">
                     <span style="padding:0 10px;">{{item.collectCount}}</span>
+                </span>
+                <span class="glyphicon glyphicon-comment" style="float:right;padding-right:10px;cursor:pointer;" @click="gotoDetail(item.jinjuId)">
+                    <span style="padding:0 10px;">{{item.commentCount}}</span>
                 </span>
                 <span :class="{'clicked': item.upOrDownVote === 2}" class="glyphicon glyphicon-thumbs-down" style="float:right;padding-right:10px;cursor:pointer;" @click="downVoteClick(item)">
                     <span style="padding:0 10px;">{{item.downVoteCount}}</span>

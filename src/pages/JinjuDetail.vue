@@ -15,8 +15,11 @@
             </div>
             <div>
                 <el-tag :type="jinjuDetail.itemTagClass" class="item-tag">{{jinjuDetail.typeShow}}</el-tag>
-                <span :class="{'clicked': jinjuDetail.isCollect}" class="glyphicon glyphicon-star" style="float:right;cursor:pointer;" @click="collectClick(jinjuDetail.jinjuId)">
+                <span :class="{'clicked': jinjuDetail.isCollect}" class="glyphicon glyphicon-star-empty" style="float:right;cursor:pointer;" @click="collectClick(jinjuDetail.jinjuId)">
                     <span style="padding:0 10px;">{{jinjuDetail.collectCount}}</span>
+                </span>
+                <span class="glyphicon glyphicon-comment" style="float:right;padding-right:10px;color:#333;">
+                    <span style="padding:0 10px;">{{jinjuDetail.commentCount}}</span>
                 </span>
                 <span :class="{'clicked': jinjuDetail.upOrDownVote === 2}" class="glyphicon glyphicon-thumbs-down" style="float:right;padding-right:10px;cursor:pointer" @click="downVoteClick(jinjuDetail.jinjuId)">
                     <span style="padding:0 10px;">{{jinjuDetail.downVoteCount}}</span>
@@ -41,8 +44,6 @@
             <el-card class="box-card comment-card" v-for="(item,index) in commentList" :key="item.index">
                 <div slot="header" style="display:flex;">
                     <img :src="item.photoUrl" alt="" style="width: 40px;height: 40px;border-radius:20px;">
-                    <!-- <span style="padding:0 6px;">#{{total - (commentParams.pageIndex -1)*commentParams.pageSize - index }}</span> -->
-                    <!-- <span class="item-username">{{item.username}}</span> -->
                     <div style="padding-left:20px;">
                         <div style="padding-bottom:3px;">
                             <span style="padding:0 6px;">#{{total - (commentParams.pageIndex -1)*commentParams.pageSize - index }}</span>
