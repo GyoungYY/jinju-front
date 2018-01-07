@@ -1,9 +1,14 @@
 <template>
     <div class="list-container">
         <el-card class="box-card" v-for="(item,index) in jinjuList" :key="item.index">
-            <div slot="header">
+            <div slot="header" style="display:flex;">
                 <img :src="item.photoUrl" alt="" style="width: 40px;height: 40px;border-radius:20px;">
-                <span class="item-username">{{item.username}}</span>
+                <div style="padding-left:10px;">
+                    <div style="padding-bottom:3px;">
+                        <span class="item-username">{{item.username}}</span>
+                    </div>
+                    <span style="color:#aaa;">{{item.createTimeShow}}</span>
+                </div>
             </div>
             <div class="item-content" @click="gotoDetail(item.jinjuId)">
                 {{item.content}}
@@ -37,6 +42,7 @@
 <script>
 import JinjuInterface from "@/interface/JinjuInterface";
 import scrollFunc from "@/common/js/scrollFunc";
+import formatTime from "@/common/js/formatTime";
 
 let timer = null;
 
@@ -72,6 +78,7 @@ export default {
         this.jinjuList = data.list.map(item => {
           item.typeShow = this.typeEnum[item.type];
           item.itemTagClass = this.tagClass[item.type];
+          item.createTimeShow = formatTime.getFormatTime(item.createTime);
           item.photoUrl = "../../static/img/photo" + item.userId % 4 + ".jpeg";
           return item;
         });
@@ -173,7 +180,6 @@ export default {
   font-size: 16px;
   font-weight: bold;
   color: #f90;
-  padding-left: 8px;
 }
 
 .item-content {

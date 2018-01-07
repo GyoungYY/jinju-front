@@ -1,9 +1,14 @@
 <template>
   <div class="detail-container">
         <el-card class="box-card">
-            <div slot="header">
+            <div slot="header" style="display:flex;">
                 <img :src="jinjuDetail.photoUrl" alt="" style="width: 40px;height: 40px;border-radius:20px;">
-                <span class="item-username">{{jinjuDetail.username}}</span>
+                <div style="padding-left:10px;">
+                    <div style="padding-bottom:3px;">
+                        <span class="item-username">{{jinjuDetail.username}}</span>
+                    </div>
+                    <span style="color:#aaa;">{{jinjuDetail.createTimeShow}}</span>
+                </div>
             </div>
             <div class="item-content">
                 {{jinjuDetail.content}}
@@ -33,11 +38,18 @@
                 </div>
             </div>
 
-            <el-card class="box-card" v-for="(item,index) in commentList" :key="item.index">
-                <div slot="header">
+            <el-card class="box-card comment-card" v-for="(item,index) in commentList" :key="item.index">
+                <div slot="header" style="display:flex;">
                     <img :src="item.photoUrl" alt="" style="width: 40px;height: 40px;border-radius:20px;">
-                    <span style="padding:0 6px;">#{{total - (commentParams.pageIndex -1)*commentParams.pageSize - index }}</span>
-                    <span class="item-username">{{item.username}}</span>
+                    <!-- <span style="padding:0 6px;">#{{total - (commentParams.pageIndex -1)*commentParams.pageSize - index }}</span> -->
+                    <!-- <span class="item-username">{{item.username}}</span> -->
+                    <div style="padding-left:20px;">
+                        <div style="padding-bottom:3px;">
+                            <span style="padding:0 6px;">#{{total - (commentParams.pageIndex -1)*commentParams.pageSize - index }}</span>
+                            <span class="item-username">{{item.username}}</span>
+                        </div>
+                        <span style="color:#aaa;">{{item.createTimeShow}}</span>
+                    </div>
                 </div>
                 <div class="item-content">
                     {{item.content}}
@@ -46,7 +58,7 @@
                     <span :class="{'clicked': item.isUpClicked}" class="glyphicon glyphicon-thumbs-up" style="padding-right:10px;float:right;cursor:pointer;" @click="upVoteComment(item)">
                         <span style="padding:0 10px;">{{item.upVoteCount}}</span>
                     </span>
-            </div>
+                </div>
             </el-card>
 
             <el-pagination
@@ -65,6 +77,7 @@
 <script>
 import JinjuInterface from "@/interface/JinjuInterface";
 import CommentInterface from "@/interface/CommentInterface";
+import formatTime from "@/common/js/formatTime";
 
 export default {
   data() {
@@ -110,6 +123,9 @@ export default {
         this.jinjuDetail = data;
         this.jinjuDetail.typeShow = this.typeEnum[data.type];
         this.jinjuDetail.itemTagClass = this.tagClass[data.type];
+        this.jinjuDetail.createTimeShow = formatTime.getFormatTime(
+          data.createTime
+        );
         this.jinjuDetail.photoUrl =
           "../../static/img/photo" + data.userId % 4 + ".jpeg";
       });
@@ -179,6 +195,7 @@ export default {
           this.commentList = data.list.map(item => {
             item.photoUrl =
               "../../static/img/photo" + item.userId % 4 + ".jpeg";
+            item.createTimeShow = formatTime.getFormatTime(item.createTime);
             return item;
           });
           this.total = data.total;
@@ -225,7 +242,6 @@ export default {
   font-size: 16px;
   font-weight: bold;
   color: #f90;
-  padding-left: 8px;
 }
 
 .item-content {

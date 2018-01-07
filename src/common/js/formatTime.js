@@ -53,7 +53,7 @@ let timeUtils = {
         if (second < 10) {
             second = "0" + second;
         }
-        return year + "-" + month + "-" + date + " " + hour + ":" + minute;
+        return year + "/" + month + "/" + date + " " + hour + ":" + minute;
     },
 
     //返回多少天多少小时
