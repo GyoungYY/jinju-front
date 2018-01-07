@@ -36,17 +36,14 @@
             <el-card class="box-card" v-for="(item,index) in commentList" :key="item.index">
                 <div slot="header">
                     <img :src="item.photoUrl" alt="" style="width: 40px;height: 40px;border-radius:20px;">
-                    <span style="padding:0 6px;">#{{index + 1}}</span>
-                    <span class="item-username">用户名</span>
+                    <span style="padding:0 6px;">#{{total - (commentParams.pageIndex -1)*commentParams.pageSize - index }}</span>
+                    <span class="item-username">{{item.username}}</span>
                 </div>
-                <div class="item-content" @click="gotoDetail(item.jinjuId)">
+                <div class="item-content">
                     {{item.content}}
                 </div>
                 <div style="height:20px;">
-                    <span class="glyphicon glyphicon-thumbs-down" style="padding-right:10px;float:right;">
-                        <span style="padding:0 10px;">{{item.downVoteCount}}</span>
-                    </span>
-                    <span class="glyphicon glyphicon-thumbs-up" style="padding-right:10px;float:right;">
+                    <span :class="{'clicked': item.isUpClicked}" class="glyphicon glyphicon-thumbs-up" style="padding-right:10px;float:right;cursor:pointer;" @click="upVoteComment(item)">
                         <span style="padding:0 10px;">{{item.upVoteCount}}</span>
                     </span>
             </div>
@@ -55,8 +52,8 @@
             <el-pagination
                 background
                 @current-change="handleCurrentChange"
-                :current-page="searchParams.pageIndex"
-                :page-size="searchParams.pageSize"
+                :current-page="commentParams.pageIndex"
+                :page-size="commentParams.pageSize"
                 layout="total, prev, pager, next, jumper"
                 :total="total" class="pagination"
                 v-if="commentList.length > 0">
@@ -67,15 +64,11 @@
 
 <script>
 import JinjuInterface from "@/interface/JinjuInterface";
+import CommentInterface from "@/interface/CommentInterface";
+
 export default {
   data() {
     return {
-      searchParams: {
-        pageIndex: 1,
-        pageSize: 15
-      },
-      commentList: [],
-      total: 0,
       typeEnum: {
         1: "搞笑",
         2: "情感",
@@ -88,29 +81,24 @@ export default {
       },
 
       jinjuDetail: {},
-      myComment: ""
+      commentList: [],
+      total: 0,
+      myComment: "",
+      commentParams: {
+        pageIndex: 1,
+        pageSize: 5,
+        jinjuId: this.$route.params.id,
+        parentId: 0
+      },
+      jinjuId: this.$route.params.id
     };
   },
   mounted() {
     this.getJinjuDetail(this.$route.params.id);
-    scrollTo(0,0);
-    // this.getCommentList(1);
+    scrollTo(0, 0);
+    this.getCommentList(1);
   },
   methods: {
-    //获取评论列表
-    getCommentList(page) {
-      this.searchParams.pageIndex = page;
-      JinjuInterface.getCommentList(this.searchParams).then(data => {
-        this.commentList = data.list.map(item => {
-          item.typeShow = this.typeEnum[item.type];
-          item.itemTagClass = this.tagClass[item.type];
-          item.photoUrl = "../../static/img/photo" + item.userId % 4 + ".jpeg";
-          return item;
-        });
-        this.total = data.total;
-      });
-    },
-
     //切换页数
     handleCurrentChange(page) {
       this.getCommentList(page);
@@ -128,41 +116,95 @@ export default {
     },
 
     //点击赞按钮
-    upVoteClick(jinjuId){
-        let type = this.jinjuDetail.upOrDownVote === 1 ? 2 : 1;   //1赞，2取消
-        JinjuInterface.upVote(jinjuId,type).then(data => {
-            this.$message.success(data);
-            this.getJinjuDetail(this.$route.params.id);
-        }).catch(reason =>{
-            this.$message.error(reason);
+    upVoteClick(jinjuId) {
+      let type = this.jinjuDetail.upOrDownVote === 1 ? 2 : 1; //1赞，2取消
+      JinjuInterface.upVote(jinjuId, type)
+        .then(data => {
+          this.$message.success(data);
+          this.getJinjuDetail(this.$route.params.id);
+        })
+        .catch(reason => {
+          this.$message.error(reason);
         });
     },
 
     //点击踩按钮
-    downVoteClick(jinjuId){
-        let type = this.jinjuDetail.upOrDownVote === 2 ? 2 : 1;   //1踩，2取消
-        JinjuInterface.downVote(jinjuId,type).then(data => {
-            this.$message.success(data);
-            this.getJinjuDetail(this.$route.params.id);
-        }).catch(reason =>{
-            this.$message.error(reason);
+    downVoteClick(jinjuId) {
+      let type = this.jinjuDetail.upOrDownVote === 2 ? 2 : 1; //1踩，2取消
+      JinjuInterface.downVote(jinjuId, type)
+        .then(data => {
+          this.$message.success(data);
+          this.getJinjuDetail(this.$route.params.id);
+        })
+        .catch(reason => {
+          this.$message.error(reason);
         });
     },
 
     //点击收藏
     collectClick(jinjuId) {
-      let type = this.jinjuDetail.isCollect ? 2 : 1;   //1收藏，2取消
-        JinjuInterface.collect(jinjuId,type).then(data => {
-            this.$message.success(data);
-            this.getJinjuDetail(this.$route.params.id);
-        }).catch(reason =>{
-            this.$message.error(reason);
+      let type = this.jinjuDetail.isCollect ? 2 : 1; //1收藏，2取消
+      JinjuInterface.collect(jinjuId, type)
+        .then(data => {
+          this.$message.success(data);
+          this.getJinjuDetail(this.$route.params.id);
+        })
+        .catch(reason => {
+          this.$message.error(reason);
         });
     },
 
     //发表评论
     publishComment() {
-      this.$message.warning("不要急，该功能程序员正在设计中哦~");
+      let params = {
+        jinjuId: this.jinjuId,
+        content: this.myComment
+      };
+      CommentInterface.createComment(params)
+        .then(data => {
+          this.$message.success("发表成功");
+          this.myComment = "";
+          this.getCommentList(this.commentParams.pageIndex);
+        })
+        .catch(reason => {
+          this.$message.error(reason);
+        });
+    },
+
+    //获取评论列表
+    getCommentList(page) {
+      this.commentParams.pageIndex = page;
+      CommentInterface.getCommentList(this.commentParams)
+        .then(data => {
+          this.commentList = data.list.map(item => {
+            item.photoUrl =
+              "../../static/img/photo" + item.userId % 4 + ".jpeg";
+            return item;
+          });
+          this.total = data.total;
+        })
+        .catch(reason => {
+          this.$message.error(reason);
+        });
+    },
+
+    //评论的点赞、取消
+    upVoteComment(item) {
+      let type = item.isUpClicked ? 2 : 1;
+      CommentInterface.upVoteComment(item.id, type)
+        .then(data => {
+          if (type === 1) {
+            item.upVoteCount += 1;
+            item.isUpClicked = true;
+          } else {
+            item.upVoteCount -= 1;
+            item.isUpClicked = false;
+          }
+          this.$message.success(data);
+        })
+        .catch(reason => {
+          this.$message.error(reason);
+        });
     }
   }
 };
@@ -204,8 +246,8 @@ export default {
   width: 100%;
 }
 
-.clicked{
-    color: #fa5555;
+.clicked {
+  color: #fa5555;
 }
 
 .comment-area {
