@@ -1,6 +1,6 @@
 <template>
     <div class="list-container">
-        <el-card class="box-card" v-for="(item,index) in jinjuList" :key="index">
+        <el-card class="box-card" v-for="(item,index) in jinjuList" :key="item.index">
             <div slot="header" style="display:flex;">
                 <img :src="item.photoUrl" alt="" style="width: 40px;height: 40px;border-radius:20px;">
                 <div style="padding-left:10px;">
@@ -38,7 +38,7 @@
             layout="total, prev, pager, next, jumper"
             :total="total" class="pagination">
         </el-pagination>
-        <TabbarNav></TabbarNav>
+
     </div>
 </template>
 
@@ -46,14 +46,10 @@
 import JinjuInterface from "@/interface/JinjuInterface";
 import scrollFunc from "@/common/js/scrollFunc";
 import formatTime from "@/common/js/formatTime";
-import TabbarNav from '@/pages/TabbarNav'
 
 let timer = null;
 
 export default {
-    components:{
-			TabbarNav
-		},
   data() {
     return {
       searchParams: {
@@ -101,6 +97,7 @@ export default {
 
     //进入金句详情
     gotoDetail(id) {
+      this.$router.push({ path: "/index/JinjuDetail/" + id });
     },
 
     //点击赞按钮
@@ -175,6 +172,7 @@ export default {
 .list-container {
   min-height: 750px;
   max-width: 1000px;
+  margin: 20px auto;
 }
 
 .box-card {
@@ -204,7 +202,6 @@ export default {
   text-align: center;
   margin: 20px;
   width: 100%;
-  display: none;
 }
 
 .clicked {
