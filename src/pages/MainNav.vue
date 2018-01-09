@@ -9,7 +9,7 @@
                 <li class="active-tag" @click="handleSelect('index')">首页</li>
 
 
-                <li style="float: right">
+                <li style="float: right" v-if="isLogined">
                     <el-dropdown @command="handleCommand">
                         <span class="el-dropdown-link" style="color: #f90">
                             头像
@@ -21,32 +21,62 @@
                         </el-dropdown-menu>
                     </el-dropdown>
                 </li>
-                <li style="float: right">
+                <li style="float: right;padding-left:0;" v-if="!isLogined">
+                    <el-button type="success" round @click="gotoLogin()">登录/注册</el-button>
+                </li>
+                <li style="float: right" v-if="isLogined">
                     <el-button type="danger" round icon="el-icon-edit" @click="publishClick()">发表</el-button>
                 </li>
             </ul>
         </header>
         <router-view/>
-        <footer class="toTop">
-            <div>
-                <span>关于我们</span>
-                <span>联系方式</span>
+        <footer>
+            <div class="footer-container">
+                <div class="footer-info">
+                    <div style="font-size: 20px;margin-bottom:10px;">金句猫 - 最专业、最内涵的短句子平台</div>
+                    <div>
+                        微信：www_jinjumao_club
+                        <el-button type="primary" size="small">关注</el-button>
+                    </div>
+                    <div>
+                        微博：金句猫
+                        <el-button type="primary" size="small" @click="concernWeibo()">关注</el-button>
+                    </div>
+                </div>
+
+                <div class="footer-link">
+                    <div>
+                        <span @click="gotoAboutPage('about')" style="cursor:pointer;padding-right: 6px;">关于我们</span>
+                        <span @click="gotoAboutPage('contact')" style="cursor:pointer;padding-right: 6px;">联系方式</span>
+                        <span @click="gotoAboutPage('message')" style="cursor:pointer;padding-right: 6px;">意见反馈</span>
+                        <span @click="gotoAboutPage('friend')" style="cursor:pointer;padding-right: 6px;">友情链接</span>
+                    </div>
+                    <div>
+                        <span>金句猫 ©2017 Designed & Developed by aguang & likai</span>
+                    </div>
+                </div>
+
+                <div style="clear:both;"></div> 
             </div>
-            <div>
-                <span>©2017 Designed & Developed by aguang</span>
-            </div>
-            <div>
-                <span>金句猫 - 最专业、最内涵的短句子平台</span>
-            </div>
+
         </footer>
     </div>
 </template>
 
 <script>
+    import UserInterface from "@/interface/UserInterface";
+
     export default {
         data() {
             return {
+                userInfo: JSON.parse(sessionStorage.getItem('userInfo')),
                 activeIndex: sessionStorage.getItem('tabActive') || 'index',
+                isLogined: false,
+            }
+        },
+        mounted() {
+            if (this.userInfo) {
+                this.isLogined = true;
             }
         },
         methods: {
@@ -70,14 +100,41 @@
 
             //退出登录
             logout() {
-                localStorage.removeItem('userInfo');
-                this.$message.success('退出成功');
+                sessionStorage.removeItem('userInfo');
+                UserInterface.logout(this.userInfo.userId).then(data => {
+                    this.$message.success('退出成功');
                 this.$router.push({path: '/login'});
+                }).catch(reason => {
+                    this.$message.error(reason);
+                });
             },
 
             //发表
             publishClick() {
                 this.$router.push({path: '/index/publishMain'});
+            },
+
+            //进入关于页面
+            gotoAboutPage(index){
+                if(index === 'about'){
+                    this.$router.push({path: '/index/AboutUsNav/AboutUsPage'});
+                } else if(index === 'contact'){
+                    this.$router.push({path: '/index/AboutUsNav/ContactUs'});
+                } else if(index === 'message'){
+                    this.$router.push({path: '/index/AboutUsNav/FeedBack'});
+                } else if(index === 'friend'){
+                    this.$router.push({path: '/index/AboutUsNav/FriendLink'});
+                }
+                
+            },
+
+            //登录/注册
+            gotoLogin(){
+                this.$router.push({path: '/login'});
+            },
+
+            concernWeibo(){
+                window.open('https://weibo.com/6432902837');
             }
         }
     }
@@ -120,16 +177,28 @@
 
     footer {
         color: #F7F8FA;
-        text-align: center;
-        font-size: 14px;
+        background-color: rgb(84, 92, 100);
+        /* background-image: -webkit-linear-gradient(to top, rgb(84, 92, 100), #cf9);
+        background-image: linear-gradient(to top, rgb(84, 92, 100), #cf9); */
     }
 
-    footer > div {
+    .footer-container {
+        width: 1000px;
+        margin: auto;
+        padding: 16px 0;
         line-height: 40px;
     }
 
-    .toTop {
-        background-image: -webkit-linear-gradient(to top, rgb(84, 92, 100), #cf9);
-        background-image: linear-gradient(to top, rgb(84, 92, 100), #cf9);
+    .footer-info{
+        width: 400px;
+        margin: 0 20px 0 60px;
+        float:left;
+        border-right: 1px solid #ddd;
+    }
+
+    .footer-link{
+        width: 400px;
+        margin: 0 20px;
+        float:left;
     }
 </style>
