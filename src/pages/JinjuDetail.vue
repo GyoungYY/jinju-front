@@ -13,12 +13,12 @@
             <div class="item-content">
                 {{jinjuDetail.content}}
             </div>
-            <div>
+            <div style="color:#999;">
                 <el-tag :type="jinjuDetail.itemTagClass" class="item-tag">{{jinjuDetail.typeShow}}</el-tag>
                 <span :class="{'clicked': jinjuDetail.isCollect}" class="glyphicon glyphicon-star-empty" style="float:right;cursor:pointer;" @click="collectClick(jinjuDetail.jinjuId)">
                     <span style="padding:0 10px;">{{jinjuDetail.collectCount}}</span>
                 </span>
-                <span class="glyphicon glyphicon-comment" style="float:right;padding-right:10px;color:#333;">
+                <span class="glyphicon glyphicon-comment" style="float:right;padding-right:10px;">
                     <span style="padding:0 10px;">{{jinjuDetail.commentCount}}</span>
                 </span>
                 <span :class="{'clicked': jinjuDetail.upOrDownVote === 2}" class="glyphicon glyphicon-thumbs-down" style="float:right;padding-right:10px;cursor:pointer" @click="downVoteClick(jinjuDetail.jinjuId)">

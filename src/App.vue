@@ -19,7 +19,7 @@
 
     body {
         margin: 0 auto;
-        color: #333;
+        color: #000;
         /* background-color: #cf9; */
         /* background-color: #fff; */
         background-color: #e8e8e8 !important;

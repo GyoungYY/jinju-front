@@ -13,7 +13,7 @@
             <div class="item-content" @click="gotoDetail(item.jinjuId)">
                 {{item.content}}
             </div>
-            <div>
+            <div style="color:#999;">
                 <el-tag :type="item.itemTagClass" class="item-tag">{{item.typeShow}}</el-tag>
                 <span :class="{'clicked': item.isCollect}" class="glyphicon glyphicon-star-empty" style="float:right;cursor:pointer;" @click="collectClick(item)">
                     <span style="padding:0 10px;">{{item.collectCount}}</span>
