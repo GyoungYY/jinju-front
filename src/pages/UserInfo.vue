@@ -3,7 +3,7 @@
         <el-form label-width="100px" class="info-form">
             <el-upload
                 class="avatar-uploader"
-                action="http://upload.qiniup.com"
+                action="http://upload-z0.qiniup.com"
                 :show-file-list="false"
                 :data="postData"
                 :on-success="handleAvatarSuccess"
@@ -34,124 +34,145 @@
 </template>
 
 <script>
-    import UserInterface from "@/interface/UserInterface";
-    import formatTime from "@/common/js/formatTime"
+import UserInterface from "@/interface/UserInterface";
+import QiniuInterface from "@/interface/QiniuInterface";
+import formatTime from "@/common/js/formatTime";
 
-    export default {
-        data() {
-            return {
-                userInfo: JSON.parse(sessionStorage.getItem('userInfo')),
-                infoDetail: {},
-                joinTime: '',
-                diffDay: '',
+export default {
+  data() {
+    return {
+      userInfo: JSON.parse(sessionStorage.getItem("userInfo")),
+      infoDetail: {},
+      joinTime: "",
+      diffDay: "",
 
-                imageUrl: '',
-                postData:{
-                    token: 'aI9GR6VbK_5gu3kwDj-eTFny-1Hi4sucXf5mQkeg:28x3c--LOhWr6E_R2qP9k_njr9I=:eyJzY29wZSI6Imppbmp1bWFvIiwiZGVhZGxpbmUiOjE1MTU4NTc3NTJ9'
-                }
-            }
-        },
-        mounted() {
-            if (!this.userInfo) {
-                this.$message.error('亲，先登陆吧～');
-                return;
-            }
-            this.getUserInfo();
-        },
-        methods: {
-
-            //获取用户信息
-            getUserInfo() {
-                UserInterface.getUserInfo(this.userInfo.userId).then(data => {
-                    this.infoDetail = data;
-                    this.joinTime = formatTime.getLocalTime(this.infoDetail.createTime);
-                    this.diffDay = formatTime.getDiffDay(this.infoDetail.createTime);
-                }).catch(reason => {
-                    this.$message.error(reason);
-                });
-            },
-
-            //修改
-            updateInfo() {
-                if (!this.userInfo) {
-                    this.$message.error('亲，先登陆吧～');
-                    return;
-                }
-                UserInterface.updateUser(this.infoDetail).then(data => {
-                    this.$message.success(data);
-                }).catch(reason => {
-                    this.$message.error(reason);
-                });
-            },
-
-            handleAvatarSuccess(res, file) {
-                this.imageUrl = URL.createObjectURL(file.raw);
-            },
-            beforeAvatarUpload(file) {
-                const isJPG = file.type === 'image/jpeg';
-                const isLt2M = file.size / 1024 / 1024 < 2;
-
-//                if (!isJPG) {
-//                    this.$message.error('上传头像图片只能是 JPG 格式!');
-//                }
-                if (!isLt2M) {
-                    this.$message.error('上传头像图片大小不能超过 2MB!');
-                }
-                return isJPG && isLt2M;
-            }
-        }
+      imageUrl: "",
+      postData: {
+        token:
+          "aI9GR6VbK_5gu3kwDj-eTFny-1Hi4sucXf5mQkeg:28x3c--LOhWr6E_R2qP9k_njr9I=:eyJzY29wZSI6Imppbmp1bWFvIiwiZGVhZGxpbmUiOjE1MTU4NTc3NTJ9"
+      }
+    };
+  },
+  mounted() {
+    if (!this.userInfo) {
+      this.$message.error("亲，先登陆吧～");
+      return;
     }
+    this.getUserInfo();
+    this.getUploadToken();
+  },
+  methods: {
+    //获取upload token
+    getUploadToken() {
+      QiniuInterface.getUploadToken()
+        .then(data => {
+          this.postData.token = data;
+        })
+        .catch(reason => {
+          this.$message.error(reason);
+        });
+    },
+
+    //获取用户信息
+    getUserInfo() {
+      UserInterface.getUserInfo(this.userInfo.userId)
+        .then(data => {
+          this.infoDetail = data;
+          this.joinTime = formatTime.getLocalTime(this.infoDetail.createTime);
+          this.diffDay = formatTime.getDiffDay(this.infoDetail.createTime);
+          this.imageUrl = this.infoDetail.photoUrl;
+        })
+        .catch(reason => {
+          this.$message.error(reason);
+        });
+    },
+
+    //修改
+    updateInfo() {
+      if (!this.userInfo) {
+        this.$message.error("亲，先登陆吧～");
+        return;
+      }
+      UserInterface.updateUser(this.infoDetail)
+        .then(data => {
+          this.$message.success(data);
+        })
+        .catch(reason => {
+          this.$message.error(reason);
+        });
+    },
+
+    //头像上传成功回调
+    handleAvatarSuccess(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw);
+      UserInterface.uploadUserPhoto({ photoUrl: res.key })
+        .then(data => {
+          this.$message.success(data);
+        })
+        .catch(reason => {
+          this.$message.error(reason);
+        });
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      return isLt2M;
+    }
+  }
+};
 </script>
 
 <style scoped>
+.user-container {
+  min-height: 750px;
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 50px 0;
+  background-color: #fff;
+}
 
-    .user-container {
-        min-height: 750px;
-        max-width: 1000px;
-        margin: 20px auto;
-        padding: 50px 0;
-        background-color: #fff;
-    }
+.info-form > label {
+  color: #f90;
+}
 
-    .info-form > label {
-        color: #f90;
-    }
+.info-form {
+  max-width: 600px;
+  margin: auto;
+}
 
-    .info-form {
-        max-width: 600px;
-        margin: auto;
-    }
+.avatar-uploader {
+  width: 100px;
+  margin: 20px auto;
+}
 
-    .avatar-uploader{
-        width: 100px;
-        margin: 20px auto;
-    }
-
-    .avatar-uploader .el-upload {
-        border: 1px dashed #d9d9d9;
-        border-radius: 6px;
-        cursor: pointer;
-        position: relative;
-        overflow: hidden;
-    }
-    .avatar-uploader .el-upload:hover {
-        border-color: #409EFF;
-    }
-    .avatar-uploader-icon {
-        font-size: 28px;
-        color: #8c939d;
-        width: 100px;
-        height: 100px;
-        border: 1px solid #ddd;
-        border-radius: 50px;
-        line-height: 100px;
-        text-align: center;
-    }
-    .avatar {
-        width: 100px;
-        height: 100px;
-        border: 1px solid #ddd;
-        border-radius: 50px;
-        display: block;
-    }
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 100px;
+  height: 100px;
+  border: 1px solid #ddd;
+  border-radius: 50px;
+  line-height: 100px;
+  text-align: center;
+}
+.avatar {
+  width: 100px;
+  height: 100px;
+  border: 1px solid #ddd;
+  border-radius: 50px;
+  display: block;
+}
 </style>
