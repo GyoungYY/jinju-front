@@ -100,7 +100,7 @@ export default {
       myComment: "",
       commentParams: {
         pageIndex: 1,
-        pageSize: 5,
+        pageSize: 10,
         jinjuId: this.$route.params.id,
         parentId: 0
       },
@@ -127,8 +127,6 @@ export default {
         this.jinjuDetail.createTimeShow = formatTime.getFormatTime(
           data.createTime
         );
-        this.jinjuDetail.photoUrl =
-          "../../static/img/photo" + data.userId % 4 + ".jpeg";
       });
     },
 
@@ -194,8 +192,6 @@ export default {
       CommentInterface.getCommentList(this.commentParams)
         .then(data => {
           this.commentList = data.list.map(item => {
-            item.photoUrl =
-              "../../static/img/photo" + item.userId % 4 + ".jpeg";
             item.createTimeShow = formatTime.getFormatTime(item.createTime);
             return item;
           });
