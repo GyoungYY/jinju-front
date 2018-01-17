@@ -69,4 +69,15 @@ export default {
         })
     },
 
+    //获取地区列表
+    getAreaList(params) {
+        return fetch.get(API + '/area/list', params).then(response => {
+            if (response.code === 0) {
+                return response.data;
+            } else {
+                return Promise.reject(response.message);
+            }
+        })
+    },
+
 }

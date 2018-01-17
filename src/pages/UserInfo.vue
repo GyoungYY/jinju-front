@@ -11,8 +11,8 @@
                 <img v-if="imageUrl" :src="imageUrl" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
-            <el-form-item>
-                <h4 style="color: #f90;margin: 0;">{{joinTime}}入网，在网时长{{diffDay || '0小时'}}</h4>
+            <el-form-item class="join-time">
+                <h4 style="color: #f90;margin-right: 100px;">{{joinTime}}入网，在网时长{{diffDay || '0小时'}}</h4>
             </el-form-item>
             <el-form-item label="用户名">
                 <el-input v-model="infoDetail.username"></el-input>
@@ -23,9 +23,38 @@
             <el-form-item label="邮箱">
                 <el-input v-model="infoDetail.email"></el-input>
             </el-form-item>
-            <el-form-item label="地址">
-                <el-input v-model="infoDetail.address"></el-input>
+            <el-form-item label="所在地：">
+                <el-select v-model="selectedProvId" placeholder="请选择省" class="select-address" @change="provChange">
+                    <el-option
+                        v-for="item in provinces"
+                        :key="item.areaCode"
+                        :label="item.areaName"
+                        :value="item.areaCode">
+                    </el-option>
+                </el-select>
+                <el-select v-model="selectedCityId" placeholder="请选择市" class="select-address" @change="cityChange">
+                    <el-option
+                        v-for="item in citys"
+                        :key="item.areaCode"
+                        :label="item.areaName"
+                        :value="item.areaCode">
+                    </el-option>
+                </el-select>
+                <el-select v-model="selectedAreaId" placeholder="请选择区" class="select-address">
+                    <el-option
+                        v-for="item in areas"
+                        :key="item.areaCode"
+                        :label="item.areaName"
+                        :value="item.areaCode">
+                    </el-option>
+                </el-select>
             </el-form-item>
+            <el-form-item>
+                <el-input v-model="infoDetail.addrDetail" placeholder="请输入详细地址" :maxlength="50"></el-input>
+            </el-form-item>
+            <!-- <el-form-item label="地址">
+                <el-input v-model="infoDetail.address"></el-input>
+            </el-form-item> -->
             <el-form-item>
                 <el-button type="primary" @click="updateInfo()">修改</el-button>
             </el-form-item>
@@ -50,7 +79,14 @@ export default {
       postData: {
         token:
           "aI9GR6VbK_5gu3kwDj-eTFny-1Hi4sucXf5mQkeg:28x3c--LOhWr6E_R2qP9k_njr9I=:eyJzY29wZSI6Imppbmp1bWFvIiwiZGVhZGxpbmUiOjE1MTU4NTc3NTJ9"
-      }
+      },
+
+      provinces: [],
+      citys: [],
+      areas: [],
+      selectedProvId: "",
+      selectedCityId: "",
+      selectedAreaId: ""
     };
   },
   mounted() {
@@ -60,6 +96,7 @@ export default {
     }
     this.getUserInfo();
     this.getUploadToken();
+    this.getProvList();
   },
   methods: {
     //获取upload token
@@ -78,9 +115,16 @@ export default {
       UserInterface.getUserInfo(this.userInfo.userId)
         .then(data => {
           this.infoDetail = data;
+          this.selectedProvId = data.provinceCode;
+          this.selectedCityId = data.cityCode;
+          this.selectedAreaId = data.countyCode;
           this.joinTime = formatTime.getLocalTime(this.infoDetail.createTime);
           this.diffDay = formatTime.getDiffDay(this.infoDetail.createTime);
           this.imageUrl = this.infoDetail.photoUrl;
+          if (this.selectedAreaId) {
+            this.getCityList(this.selectedProvId);
+            this.getAreaList(this.selectedCityId);
+          }
         })
         .catch(reason => {
           this.$message.error(reason);
@@ -92,6 +136,9 @@ export default {
       if (!this.userInfo) {
         this.$message.error("亲，先登陆吧～");
         return;
+      }
+      if(this.selectedAreaId){
+        this.infoDetail.addrCode = this.selectedAreaId;
       }
       UserInterface.updateUser(this.infoDetail)
         .then(data => {
@@ -120,6 +167,52 @@ export default {
         this.$message.error("上传头像图片大小不能超过 2MB!");
       }
       return isLt2M;
+    },
+
+    //获取省列表
+    getProvList: function() {
+      UserInterface.getAreaList()
+        .then(data => {
+          this.provinces = data;
+        })
+        .catch(reason => this.$message.error(String(reason)));
+    },
+
+    //改变省
+    provChange: function() {
+      this.selectedCityId = "";
+      this.selectedAreaId = "";
+      this.getCityList(this.selectedProvId);
+    },
+
+    //获取市列表
+    getCityList: function(provId) {
+      let params = {
+        parentCode: provId
+      };
+      UserInterface.getAreaList(params)
+        .then(data => {
+          this.citys = data;
+        })
+        .catch(reason => this.$message.error(String(reason)));
+    },
+
+    //改变市
+    cityChange: function() {
+      this.selectedAreaId = "";
+      this.getAreaList(this.selectedCityId);
+    },
+
+    //获取区列表
+    getAreaList: function(cityId) {
+      let params = {
+        parentCode: cityId
+      };
+      UserInterface.getAreaList(params)
+        .then(data => {
+          this.areas = data;
+        })
+        .catch(reason => this.$message.error(String(reason)));
     }
   }
 };
@@ -139,7 +232,7 @@ export default {
 }
 
 .info-form {
-  max-width: 600px;
+  max-width: 700px;
   margin: auto;
 }
 
@@ -174,5 +267,12 @@ export default {
   border: 1px solid #ddd;
   border-radius: 50px;
   display: block;
+}
+
+.join-time {
+  text-align: center;
+}
+.select-address {
+  width: 197px;
 }
 </style>
