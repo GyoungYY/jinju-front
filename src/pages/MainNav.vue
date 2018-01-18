@@ -12,7 +12,8 @@
                 <li style="float: right" v-if="isLogined">
                     <el-dropdown @command="handleCommand">
                         <span class="el-dropdown-link" style="color: #f90">
-                            头像
+                            <img :src="userInfo.photoUrl" alt="" style="width: 30px;height: 30px;border-radius:15px;margin-right:10px;">
+                            {{userInfo.username}}
                             <i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">

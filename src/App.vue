@@ -24,4 +24,8 @@
         /* background-color: #fff; */
         background-color: #e8e8e8 !important;
     }
+
+    input[type=file]{
+        display: none !important;
+    }
 </style>

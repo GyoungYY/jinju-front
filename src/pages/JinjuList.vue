@@ -82,7 +82,6 @@ export default {
           item.typeShow = this.typeEnum[item.type];
           item.itemTagClass = this.tagClass[item.type];
           item.createTimeShow = formatTime.getFormatTime(item.createTime);
-          item.photoUrl = "../../static/img/photo" + item.userId % 4 + ".jpeg";
           return item;
         });
         this.total = data.total;
