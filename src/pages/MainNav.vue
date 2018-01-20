@@ -6,8 +6,8 @@
                     <img src="../assets/favicon.jpg" alt="" class="logo">
                     <span style="padding: 0 10px; font-size: 20px;">金句猫</span>
                 </li>
-                <li class="active-tag" @click="handleSelect('index')">首页</li>
-
+                <li :class="{'active-tag': activeIndex === 'index'}" @click="handleSelect('index')">首页</li>
+                <li :class="{'active-tag': activeIndex === 'article'}" @click="handleSelect('article')">美文</li>
 
                 <li style="float: right" v-if="isLogined">
                     <el-dropdown @command="handleCommand">
@@ -53,7 +53,7 @@
                         <span @click="gotoAboutPage('friend')" style="cursor:pointer;padding-right: 6px;">友情链接</span>
                     </div>
                     <div>
-                        <span>金句猫 ©2017 Designed & Developed by aguang & likai</span>
+                        <span>金句猫 ©2017-2018 Designed & Developed by aguang & likai</span>
                     </div>
                 </div>
 
@@ -85,8 +85,11 @@
             //选择顶部tab
             handleSelect(key) {
                 sessionStorage.setItem('tabActive', key);
+                this.activeIndex = key;
                 if (key === 'index') {
                     this.$router.push({path: '/index/jinjuList'});
+                } else if (key === 'article') {
+                    this.$router.push({path: '/index/articleList'});
                 }
             },
 

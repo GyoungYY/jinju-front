@@ -15,6 +15,9 @@ import ContactUs from '@/pages/about/ContactUs'
 import FeedBack from '@/pages/about/FeedBack'
 import FriendLink from '@/pages/about/FriendLink'
 
+import ArticleList from '@/pages/article/ArticleList'
+import ArticleDetail from '@/pages/article/ArticleDetail'
+
 Vue.use(Router)
 
 export default new Router({
@@ -55,9 +58,6 @@ export default new Router({
                     path: 'publishMain',
                     name: 'PublishMain',
                     component: PublishMain,
-                    children: [
-
-                    ]
                 },
                 {
                     path:'AboutUsNav',
@@ -86,6 +86,17 @@ export default new Router({
                         },
                     ]
                 },
+
+                {
+                    path:'articleList',
+                    name: 'ArticleList',
+                    component: ArticleList
+                },
+                {
+                    path:'articleDetail/:id',
+                    name: 'ArticleDetail',
+                    component: ArticleDetail
+                }
             ]
         },
     ]

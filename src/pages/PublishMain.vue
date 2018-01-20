@@ -191,7 +191,7 @@ export default {
 
 <style scoped>
 .public-container {
-  max-width: 1100px;
+  max-width: 1200px;
   min-height: 750px;
   margin: 30px auto;
 }

@@ -3,8 +3,8 @@
         element-loading-text="拼命加载中"
         element-loading-spinner="el-icon-loading"
         element-loading-background="#fff">
-        <el-card class="box-card" v-for="(item,index) in jinjuList" :key="item.index">
-            <div slot="header" style="display:flex;">
+        <div class="box-card" v-for="(item,index) in jinjuList" :key="item.index">
+            <div class="box-header" style="display:flex;">
                 <img :src="item.photoUrl" alt="" style="width: 40px;height: 40px;border-radius:20px;">
                 <div style="padding-left:10px;">
                     <div style="padding-bottom:3px;">
@@ -14,9 +14,13 @@
                 </div>
             </div>
             <div class="item-content" @click="gotoDetail(item.jinjuId)">
-                {{item.content}}
+                <div style="padding:20px;margin-right:200px">
+                    <h2 style="margin-top:0;">这是一个文章标题</h2>
+                    <div>{{item.content}}</div>
+                </div>
+                <img src="../../../static/img/photo0.jpeg" alt="" class="item-img">
             </div>
-            <div style="color:#999;">
+            <div style="" class="box-footer">
                 <el-tag :type="item.itemTagClass" class="item-tag">{{item.typeShow}}</el-tag>
                 <span :class="{'clicked': item.isCollect}" class="glyphicon glyphicon-star-empty" style="float:right;cursor:pointer;" @click="collectClick(item)">
                     <span style="padding:0 10px;">{{item.collectCount}}</span>
@@ -24,14 +28,11 @@
                 <span class="glyphicon glyphicon-comment" style="float:right;padding-right:10px;cursor:pointer;" @click="gotoDetail(item.jinjuId)">
                     <span style="padding:0 10px;">{{item.commentCount}}</span>
                 </span>
-                <span :class="{'clicked': item.upOrDownVote === 2}" class="glyphicon glyphicon-thumbs-down" style="float:right;padding-right:10px;cursor:pointer;" @click="downVoteClick(item)">
-                    <span style="padding:0 10px;">{{item.downVoteCount}}</span>
-                </span>
-                <span :class="{'clicked': item.upOrDownVote === 1}" class="glyphicon glyphicon-thumbs-up" style="float:right;padding-right:10px;cursor:pointer;" @click="upVoteClick(item)">
+                <span :class="{'clicked': item.upOrDownVote === 1}" class="glyphicon glyphicon-eye-open" style="float:right;padding-right:10px;cursor:pointer;" @click="upVoteClick(item)">
                     <span style="padding:0 10px;">{{item.upVoteCount}}</span>
                 </span>
             </div>
-        </el-card>
+        </div>
 
         <el-pagination
             background
@@ -102,7 +103,7 @@ export default {
 
     //进入金句详情
     gotoDetail(id) {
-      this.$router.push({ path: "/index/JinjuDetail/" + id });
+      this.$router.push({ path: "/index/articleDetail/" + id });
     },
 
     //点击赞按钮
@@ -182,6 +183,17 @@ export default {
 
 .box-card {
   margin-bottom: 20px;
+  background-color: #fff;
+}
+
+.box-header {
+  padding: 8px 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.box-footer {
+  color: #999;
+  padding: 10px;
 }
 
 .item-username {
@@ -191,10 +203,21 @@ export default {
 }
 
 .item-content {
-  margin-bottom: 18px;
+  margin: 10px 0;
   font-size: 14px;
   line-height: 24px;
   cursor: pointer;
+  position: relative;
+  min-height: 160px;
+}
+
+.item-img {
+  position: absolute;
+  right: 20px;
+  top: 0;
+  width: 160px;
+  height: 160px;
+  border-radius: 4px;
 }
 
 .item-tag {
