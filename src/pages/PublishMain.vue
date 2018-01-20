@@ -5,7 +5,7 @@
             <el-tab-pane label="发表金句" name="jinju">
                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
                     <el-form-item label="金句类型" prop="type">
-                        <el-select v-model="ruleForm.type" placeholder="请选择活动区域">
+                        <el-select v-model="ruleForm.type" placeholder="请选择金句类型">
                             <el-option label="搞笑" :value="1"></el-option>
                             <el-option label="情感" :value="2"></el-option>
                             <el-option label="热点" :value="3"></el-option>
@@ -31,6 +31,13 @@
                     <el-form-item label="美文概述">
                         <el-input type="textarea" v-model="article.desc" :rows="3" placeholder="请输入内容"
                                   :maxlength="150" style="width:600px;"></el-input>
+                    </el-form-item>
+                    <el-form-item label="美文类型" prop="type">
+                        <el-select v-model="article.type" placeholder="请选择美文类型">
+                            <el-option label="搞笑" :value="1"></el-option>
+                            <el-option label="情感" :value="2"></el-option>
+                            <el-option label="热点" :value="3"></el-option>
+                        </el-select>
                     </el-form-item>
                     <el-form-item label="美文封面">
                         <el-upload

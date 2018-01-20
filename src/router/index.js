@@ -18,6 +18,8 @@ import FriendLink from '@/pages/about/FriendLink'
 import ArticleList from '@/pages/article/ArticleList'
 import ArticleDetail from '@/pages/article/ArticleDetail'
 
+import UserPage from '@/pages/user/UserPage'
+
 Vue.use(Router)
 
 export default new Router({
@@ -96,6 +98,12 @@ export default new Router({
                     path:'articleDetail/:id',
                     name: 'ArticleDetail',
                     component: ArticleDetail
+                },
+
+                {
+                    path: 'userPage/:id',
+                    name: 'UserPage',
+                    component: UserPage
                 }
             ]
         },

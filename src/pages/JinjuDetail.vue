@@ -2,7 +2,7 @@
   <div class="detail-container">
         <el-card class="box-card">
             <div slot="header" style="display:flex;">
-                <img :src="jinjuDetail.photoUrl" alt="" style="width: 40px;height: 40px;border-radius:20px;">
+                <img :src="jinjuDetail.photoUrl" alt="" style="width: 40px;height: 40px;border-radius:20px;cursor:pointer;" @click="gotoUserPage(jinjuDetail.userId)">
                 <div style="padding-left:10px;">
                     <div style="padding-bottom:3px;">
                         <span class="item-username">{{jinjuDetail.username}}</span>
@@ -43,7 +43,7 @@
 
             <el-card class="box-card comment-card" v-for="(item,index) in commentList" :key="item.index">
                 <div slot="header" style="display:flex;">
-                    <img :src="item.photoUrl" alt="" style="width: 40px;height: 40px;border-radius:20px;">
+                    <img :src="item.photoUrl" alt="" style="width: 40px;height: 40px;border-radius:20px;cursor:pointer;" @click="gotoUserPage(item.userId)">
                     <div style="padding-left:20px;">
                         <div style="padding-bottom:3px;">
                             <span style="padding:0 6px;">#{{total - (commentParams.pageIndex -1)*commentParams.pageSize - index }}</span>
@@ -219,7 +219,12 @@ export default {
         .catch(reason => {
           this.$message.error(reason);
         });
-    }
+    },
+
+    //进入用户个人主页
+    gotoUserPage(id) {
+      this.$router.push({ path: "/index/userPage/" + id });
+    },
   }
 };
 </script>

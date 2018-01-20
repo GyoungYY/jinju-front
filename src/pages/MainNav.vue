@@ -6,8 +6,8 @@
                     <img src="../assets/favicon.jpg" alt="" class="logo">
                     <span style="padding: 0 10px; font-size: 20px;">金句猫</span>
                 </li>
-                <li :class="{'active-tag': activeIndex === 'index'}" @click="handleSelect('index')">首页</li>
-                <li :class="{'active-tag': activeIndex === 'article'}" @click="handleSelect('article')">美文</li>
+                <li :class="{'active-tag': activeName === 'jinjuList'}" @click="handleSelect('jinjuList')">首页</li>
+                <li :class="{'active-tag': activeName === 'articleList'}" @click="handleSelect('articleList')">美文</li>
 
                 <li style="float: right" v-if="isLogined">
                     <el-dropdown @command="handleCommand">
@@ -65,144 +65,138 @@
 </template>
 
 <script>
-    import UserInterface from "@/interface/UserInterface";
+import UserInterface from "@/interface/UserInterface";
 
-    export default {
-        data() {
-            return {
-                userInfo: JSON.parse(sessionStorage.getItem('userInfo')),
-                activeIndex: sessionStorage.getItem('tabActive') || 'index',
-                isLogined: false,
-            }
-        },
-        mounted() {
-            if (this.userInfo) {
-                this.isLogined = true;
-            }
-        },
-        methods: {
-
-            //选择顶部tab
-            handleSelect(key) {
-                sessionStorage.setItem('tabActive', key);
-                this.activeIndex = key;
-                if (key === 'index') {
-                    this.$router.push({path: '/index/jinjuList'});
-                } else if (key === 'article') {
-                    this.$router.push({path: '/index/articleList'});
-                }
-            },
-
-            //点击头像下拉
-            handleCommand(command) {
-                if (command === 'userInfo') {
-                    this.$router.push({path: '/index/userInfo'});
-                } else if (command === 'logout') {
-                    this.logout();
-                }
-            },
-
-            //退出登录
-            logout() {
-                sessionStorage.removeItem('userInfo');
-                UserInterface.logout(this.userInfo.userId).then(data => {
-                    this.$message.success('退出成功');
-                this.$router.push({path: '/login'});
-                }).catch(reason => {
-                    this.$message.error(reason);
-                });
-            },
-
-            //发表
-            publishClick() {
-                this.$router.push({path: '/index/publishMain'});
-            },
-
-            //进入关于页面
-            gotoAboutPage(index){
-                if(index === 'about'){
-                    this.$router.push({path: '/index/AboutUsNav/AboutUsPage'});
-                } else if(index === 'contact'){
-                    this.$router.push({path: '/index/AboutUsNav/ContactUs'});
-                } else if(index === 'message'){
-                    this.$router.push({path: '/index/AboutUsNav/FeedBack'});
-                } else if(index === 'friend'){
-                    this.$router.push({path: '/index/AboutUsNav/FriendLink'});
-                }
-                
-            },
-
-            //登录/注册
-            gotoLogin(){
-                this.$router.push({path: '/login'});
-            },
-
-            concernWeibo(){
-                window.open('https://weibo.com/6432902837');
-            }
-        }
+export default {
+  data() {
+    return {
+      activeName: sessionStorage.getItem("activeName") || "jinjuList",
+      userInfo: JSON.parse(sessionStorage.getItem("userInfo")),
+      isLogined: false
+    };
+  },
+  mounted() {
+    if (this.userInfo) {
+      this.isLogined = true;
     }
+  },
+  methods: {
+    //选择顶部tab
+    handleSelect(key) {
+      sessionStorage.setItem("activeName", key);
+      this.activeName = key;
+      if (key === "jinjuList") {
+        this.$router.push({ path: "/index/jinjuList" });
+      } else if (key === "articleList") {
+        this.$router.push({ path: "/index/articleList" });
+      }
+    },
+
+    //点击头像下拉
+    handleCommand(command) {
+      if (command === "userInfo") {
+        this.$router.push({ path: "/index/userInfo" });
+      } else if (command === "logout") {
+        this.logout();
+      }
+    },
+
+    //退出登录
+    logout() {
+      sessionStorage.removeItem("userInfo");
+      sessionStorage.removeItem("activeName");
+      UserInterface.logout(this.userInfo.userId)
+        .then(data => {
+          this.$message.success("退出成功");
+          this.$router.push({ path: "/login" });
+        })
+        .catch(reason => {
+          this.$message.error(reason);
+        });
+    },
+
+    //发表
+    publishClick() {
+      this.$router.push({ path: "/index/publishMain" });
+    },
+
+    //进入关于页面
+    gotoAboutPage(index) {
+      if (index === "about") {
+        this.$router.push({ path: "/index/AboutUsNav/AboutUsPage" });
+      } else if (index === "contact") {
+        this.$router.push({ path: "/index/AboutUsNav/ContactUs" });
+      } else if (index === "message") {
+        this.$router.push({ path: "/index/AboutUsNav/FeedBack" });
+      } else if (index === "friend") {
+        this.$router.push({ path: "/index/AboutUsNav/FriendLink" });
+      }
+    },
+
+    //登录/注册
+    gotoLogin() {
+      this.$router.push({ path: "/login" });
+    },
+
+    concernWeibo() {
+      window.open("https://weibo.com/6432902837");
+    }
+  }
+};
 </script>
 
 <style scoped>
+header {
+  line-height: 60px;
+  color: #f7f8fa;
+  background-color: rgb(84, 92, 100);
+}
 
-    .main-nav {
+header ul {
+  margin: 0;
+  padding: 0;
+}
 
-    }
+header li {
+  list-style: none;
+  line-height: 60px;
+  display: inline-block;
+  padding: 0 20px;
+  cursor: pointer;
+}
 
-    header {
-        line-height: 60px;
-        color: #F7F8FA;
-        background-color: rgb(84, 92, 100);
-    }
+header .logo {
+  height: 60px;
+  vertical-align: middle;
+}
 
-    header ul {
-        margin: 0;
-        padding: 0;
-    }
+.active-tag {
+  color: #f90;
+  border-bottom: 2px solid #f90;
+}
 
-    header li {
-        list-style: none;
-        line-height: 60px;
-        display: inline-block;
-        padding: 0 20px;
-        cursor: pointer;
-    }
+footer {
+  color: #f7f8fa;
+  background-color: rgb(84, 92, 100);
+}
 
-    header .logo {
-        height: 60px;
-        vertical-align: middle;
-    }
+.footer-container {
+  width: 1000px;
+  margin: auto;
+  padding: 16px 0;
+  line-height: 40px;
+}
 
-    .active-tag {
-        color: #f90;
-        border-bottom: 2px solid #f90;
-    }
+.footer-info {
+  width: 400px;
+  margin: 0 20px 0 60px;
+  float: left;
+  border-right: 1px solid #ddd;
+}
 
-    footer {
-        color: #F7F8FA;
-        background-color: rgb(84, 92, 100);
-        /* background-image: -webkit-linear-gradient(to top, rgb(84, 92, 100), #cf9);
-        background-image: linear-gradient(to top, rgb(84, 92, 100), #cf9); */
-    }
-
-    .footer-container {
-        width: 1000px;
-        margin: auto;
-        padding: 16px 0;
-        line-height: 40px;
-    }
-
-    .footer-info{
-        width: 400px;
-        margin: 0 20px 0 60px;
-        float:left;
-        border-right: 1px solid #ddd;
-    }
-
-    .footer-link{
-        width: 400px;
-        margin: 0 20px;
-        float:left;
-    }
+.footer-link {
+  width: 400px;
+  margin: 0 20px;
+  float: left;
+}
 </style>

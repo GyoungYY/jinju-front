@@ -5,7 +5,7 @@
         element-loading-background="#fff">
         <el-card class="box-card" v-for="(item,index) in jinjuList" :key="item.index">
             <div slot="header" style="display:flex;">
-                <img :src="item.photoUrl" alt="" style="width: 40px;height: 40px;border-radius:20px;">
+                <img :src="item.photoUrl" alt="" style="width: 40px;height: 40px;border-radius:20px;cursor:pointer;" @click="gotoUserPage(item.userId)">
                 <div style="padding-left:10px;">
                     <div style="padding-bottom:3px;">
                         <span class="item-username">{{item.username}}</span>
@@ -103,6 +103,11 @@ export default {
     //进入金句详情
     gotoDetail(id) {
       this.$router.push({ path: "/index/JinjuDetail/" + id });
+    },
+
+    //进入用户个人主页
+    gotoUserPage(id) {
+      this.$router.push({ path: "/index/userPage/" + id });
     },
 
     //点击赞按钮
