@@ -184,6 +184,8 @@ export default {
 .box-card {
   margin-bottom: 20px;
   background-color: #fff;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid #e6ebf5;
 }
 
 .box-header {
