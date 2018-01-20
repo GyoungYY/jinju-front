@@ -1,7 +1,7 @@
 <template>
     <div class="user-container">
         <el-form label-width="100px" class="info-form">
-            <img :src="imageUrl" class="avatar">
+            <img v-if="imageUrl" :src="imageUrl" class="avatar">
             <div class="user-name">{{infoDetail.username}}</div>
             <el-form-item class="join-time">
                 <h4 style="color: #999;margin-right: 100px;">{{joinTime}}入网，在网时长{{diffDay || '0小时'}}</h4>

@@ -24,11 +24,11 @@
             </el-tab-pane>
 
             <el-tab-pane label="发表美文" name="meiwen">
-                <el-form :model="article" ref="article" label-width="100px" class="demo-ruleForm">
-                    <el-form-item label="美文标题">
+                <el-form :model="article" :rules="articleRules" ref="article" label-width="100px" class="demo-ruleForm">
+                    <el-form-item label="美文标题" prop="title">
                         <el-input v-model="article.title" style="width:600px;"></el-input>
                     </el-form-item>
-                    <el-form-item label="美文概述">
+                    <el-form-item label="美文概述" prop="desc">
                         <el-input type="textarea" v-model="article.desc" :rows="3" placeholder="请输入内容"
                                   :maxlength="150" style="width:600px;"></el-input>
                     </el-form-item>
@@ -39,7 +39,7 @@
                             <el-option label="热点" :value="3"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="美文封面">
+                    <el-form-item label="美文封面" prop="img">
                         <el-upload
                             class="avatar-uploader"
                             action="http://upload-z0.qiniup.com"
@@ -58,7 +58,7 @@
                 </quill-editor>
 
                 <el-row style="margin: 10px 0;float:right;">
-                        <el-button type="primary" @click="submitArticle()">立即创建</el-button>
+                        <el-button type="primary" @click="submitArticle('article')">立即创建</el-button>
                         <el-button @click="resetArticle()">重置</el-button>
                 </el-row>
                 <div style="clear:both;"></div>
@@ -102,6 +102,13 @@ export default {
         content: [
           { required: true, message: "请填写金句内容", trigger: "blur" }
         ]
+      },
+
+      articleRules: {
+        title: [{ required: true, message: "请输入文章标题" }],
+        desc: [{ required: true, message: "请输入文章概述" }],
+        type: [{ required: true, message: "请选择文章类型" }],
+        img: [{ required: true, message: "请选择上传文章封面" }],
       },
 
       article: {},
@@ -185,8 +192,14 @@ export default {
     },
 
     //创建文章
-    submitArticle() {
+    submitArticle(formName) {
       console.log(this.content);
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+        } else {
+          return false;
+        }
+      });
     },
 
     resetArticle() {
