@@ -1,31 +1,21 @@
 <template>
   <div class="detail-container">
-        <el-card class="box-card">
-            <div slot="header" style="display:flex;">
-                <img :src="jinjuDetail.photoUrl" alt="" style="width: 40px;height: 40px;border-radius:20px;">
-                <div style="padding-left:10px;">
-                    <div style="padding-bottom:3px;">
-                        <span class="item-username">{{jinjuDetail.username}}</span>
-                    </div>
-                    <span style="color:#aaa;">{{jinjuDetail.createTimeShow}}</span>
-                </div>
+      <div class="meiwen-container">
+        <h1 class="meiwen-title">{{articleDetail.title}}</h1>
+        <div class="meiwen-author">
+            <span style="padding: 0 20px;">时间：{{articleDetail.createTimeShow}}</span>
+            <span style="padding: 0 20px;">作者：{{articleDetail.username}}</span>
+            <span style="padding: 0 20px;">阅读量：{{articleDetail.browseCount}}</span>
+        </div>
+        <div class="meiwen-summary">
+            {{articleDetail.summary}}
+        </div>
+        <div class="ql-container ql-snow">
+            <div class="ql-editor">
+                <div v-html="articleDetail.content" style=""></div>
             </div>
-            <div class="item-content">
-                {{jinjuDetail.content}}
-            </div>
-            <div style="color:#999;">
-                <el-tag :type="jinjuDetail.itemTagClass" class="item-tag">{{jinjuDetail.typeShow}}</el-tag>
-                <span :class="{'clicked': jinjuDetail.isCollect}" class="glyphicon glyphicon-star-empty" style="float:right;cursor:pointer;" @click="collectClick(jinjuDetail.jinjuId)">
-                    <span style="padding:0 10px;">{{jinjuDetail.collectCount}}</span>
-                </span>
-                <span class="glyphicon glyphicon-comment" style="float:right;padding-right:10px;">
-                    <span style="padding:0 10px;">{{jinjuDetail.commentCount}}</span>
-                </span>
-                <span :class="{'clicked': jinjuDetail.upOrDownVote === 1}" class="glyphicon glyphicon-eye-open" style="float:right;padding-right:10px;cursor:pointer" @click="upVoteClick(jinjuDetail.jinjuId)">
-                    <span style="padding:0 10px;">{{jinjuDetail.upVoteCount}}</span>
-                </span>
-            </div>
-        </el-card>
+        </div>
+      </div>
 
         <div class="comment-area">
 
@@ -74,6 +64,7 @@
 
 <script>
 import JinjuInterface from "@/interface/JinjuInterface";
+import MeiwenInterface from "@/interface/MeiwenInterface";
 import CommentInterface from "@/interface/CommentInterface";
 import formatTime from "@/common/js/formatTime";
 
@@ -91,7 +82,7 @@ export default {
         3: "danger"
       },
 
-      jinjuDetail: {},
+      articleDetail: {},
       commentList: [],
       total: 0,
       myComment: "",
@@ -105,7 +96,7 @@ export default {
     };
   },
   mounted() {
-    this.getJinjuDetail(this.$route.params.id);
+    this.getMeiwenDetail(this.$route.params.id);
     scrollTo(0, 0);
     this.getCommentList(1);
   },
@@ -116,12 +107,12 @@ export default {
     },
 
     //获取详情
-    getJinjuDetail(id) {
-      JinjuInterface.getJinjuDetail(id).then(data => {
-        this.jinjuDetail = data;
-        this.jinjuDetail.typeShow = this.typeEnum[data.type];
-        this.jinjuDetail.itemTagClass = this.tagClass[data.type];
-        this.jinjuDetail.createTimeShow = formatTime.getFormatTime(
+    getMeiwenDetail(id) {
+      MeiwenInterface.getMeiwenDetail(id).then(data => {
+        this.articleDetail = data;
+        this.articleDetail.typeShow = this.typeEnum[data.type];
+        this.articleDetail.itemTagClass = this.tagClass[data.type];
+        this.articleDetail.createTimeShow = formatTime.getFormatTime(
           data.createTime
         );
       });
@@ -135,7 +126,7 @@ export default {
       JinjuInterface.upVote(jinjuId, type)
         .then(data => {
           this.$message.success(data);
-          this.getJinjuDetail(this.$route.params.id);
+          this.getMeiwenDetail(this.$route.params.id);
         })
         .catch(reason => {
           this.$message.error(reason);
@@ -150,7 +141,7 @@ export default {
       JinjuInterface.downVote(jinjuId, type)
         .then(data => {
           this.$message.success(data);
-          this.getJinjuDetail(this.$route.params.id);
+          this.getMeiwenDetail(this.$route.params.id);
         })
         .catch(reason => {
           this.$message.error(reason);
@@ -165,7 +156,7 @@ export default {
       JinjuInterface.collect(jinjuId, type)
         .then(data => {
           this.$message.success(data);
-          this.getJinjuDetail(this.$route.params.id);
+          this.getMeiwenDetail(this.$route.params.id);
         })
         .catch(reason => {
           this.$message.error(reason);
@@ -232,8 +223,36 @@ export default {
 <style scoped>
 .detail-container {
   max-width: 1000px;
-  min-height: 750px;
+  min-height: 650px;
   margin: 20px auto;
+}
+
+.meiwen-container {
+  background-color: #fff;
+  margin-bottom: 10px;
+  padding: 0 110px 40px;
+}
+
+.meiwen-title {
+  text-align: center;
+  padding: 40px 0 10px;
+}
+.meiwen-author {
+  text-align: center;
+  font-size: 14px;
+  color: #888;
+}
+
+.meiwen-summary {
+  padding: 12px 15px;
+  background-color: #eee;
+  margin: 10px;
+  line-height: 1.8;
+  border-radius: 5px;
+}
+
+.ql-container.ql-snow {
+  border: none;
 }
 
 .box-card {

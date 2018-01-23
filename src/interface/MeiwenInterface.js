@@ -25,4 +25,15 @@ export default {
             }
         })
     },
+
+    //获取美文详情
+    getMeiwenDetail(id) {
+        return fetch.get(API + '/meiwen/get/' + id).then(response => {
+            if (response.code === 0) {
+                return response.data;
+            } else {
+                return Promise.reject(response.message);
+            }
+        })
+    },
 }

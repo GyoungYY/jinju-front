@@ -39,7 +39,7 @@
                             <el-option label="热点" :value="3"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="美文封面" prop="coverImgUrl">
+                    <el-form-item label="美文封面" prop="imageUrl">
                         <el-upload
                             class="avatar-uploader"
                             action="http://upload-z0.qiniup.com"
@@ -47,7 +47,7 @@
                             :data="postData"
                             :on-success="handleAvatarSuccess"
                             :before-upload="beforeAvatarUpload">
-                            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                            <img v-if="article.imageUrl" :src="article.imageUrl" class="avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>      
                     </el-form-item>
@@ -109,14 +109,14 @@ export default {
         title: [{ required: true, message: "请输入文章标题" }],
         summary: [{ required: true, message: "请输入文章概述" }],
         type: [{ required: true, message: "请选择文章类型" }],
-        coverImgUrl: [{ required: true, message: "请选择上传文章封面" }]
+        imageUrl: [{ required: true, message: "请选择上传文章封面" }]
       },
 
       article: {
         content: "<h2>I am Example</h2>",
-        coverImgUrl: ""
+        coverImgUrl: "",
+        imageUrl: "",
       },
-      imageUrl: "",
       options: {},
       postData: {
         token:
@@ -182,7 +182,7 @@ export default {
 
     //头像上传成功回调
     handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
+      this.article.imageUrl = URL.createObjectURL(file.raw);
       this.article.coverImgUrl = res.key;
     },
 

@@ -22,7 +22,7 @@
             </div>
             <div style="" class="box-footer">
                 <el-tag :type="item.itemTagClass" class="item-tag">{{item.typeShow}}</el-tag>
-                <span :class="{'clicked': item.isCollect}" class="glyphicon glyphicon-star-empty" style="float:right;cursor:pointer;" @click="collectClick(item)">
+                <span :class="{'clicked': item.isCollect}" class="glyphicon glyphicon-star-empty" style="float:right;cursor:pointer;" @click="">
                     <span style="padding:0 10px;">{{item.collectCount}}</span>
                 </span>
                 <span class="glyphicon glyphicon-comment" style="float:right;padding-right:10px;cursor:pointer;" @click="gotoDetail(item.meiwenId)">
