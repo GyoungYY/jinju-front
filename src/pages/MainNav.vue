@@ -2,7 +2,7 @@
     <div class="main-nav">
         <header>
             <ul>
-                <li @click="handleSelect('index')">
+                <li @click="handleSelect('jinjuList')">
                     <img src="../assets/favicon.jpg" alt="" class="logo">
                     <span style="padding: 0 10px; font-size: 20px;">金句猫</span>
                 </li>
