@@ -28,8 +28,8 @@
                     <el-form-item label="美文标题" prop="title">
                         <el-input v-model="article.title" style="width:600px;"></el-input>
                     </el-form-item>
-                    <el-form-item label="美文概述" prop="desc">
-                        <el-input type="textarea" v-model="article.desc" :rows="3" placeholder="请输入内容"
+                    <el-form-item label="美文概述" prop="summary">
+                        <el-input type="textarea" v-model="article.summary" :rows="3" placeholder="请输入内容"
                                   :maxlength="150" style="width:600px;"></el-input>
                     </el-form-item>
                     <el-form-item label="美文类型" prop="type">
@@ -39,7 +39,7 @@
                             <el-option label="热点" :value="3"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="美文封面" prop="img">
+                    <el-form-item label="美文封面" prop="coverImgUrl">
                         <el-upload
                             class="avatar-uploader"
                             action="http://upload-z0.qiniup.com"
@@ -52,7 +52,7 @@
                         </el-upload>      
                     </el-form-item>
                 </el-form>
-                <quill-editor v-model="content"
+                <quill-editor v-model="article.content"
                       ref="myQuillEditor"
                       :options="options">
                 </quill-editor>
@@ -65,7 +65,7 @@
 
                 <div class="ql-container ql-snow">
                     <div class="ql-editor">
-                        <div v-html="content" style=""></div>
+                        <div v-html="article.content" style=""></div>
                     </div>
                 </div>
             </el-tab-pane>
@@ -77,6 +77,7 @@
 <script>
 import JinjuInterface from "@/interface/JinjuInterface";
 import QiniuInterface from "@/interface/QiniuInterface";
+import MeiwenInterface from "@/interface/MeiwenInterface";
 
 import { quillEditor } from "vue-quill-editor";
 import "quill/dist/quill.core.css";
@@ -106,15 +107,17 @@ export default {
 
       articleRules: {
         title: [{ required: true, message: "请输入文章标题" }],
-        desc: [{ required: true, message: "请输入文章概述" }],
+        summary: [{ required: true, message: "请输入文章概述" }],
         type: [{ required: true, message: "请选择文章类型" }],
-        img: [{ required: true, message: "请选择上传文章封面" }],
+        coverImgUrl: [{ required: true, message: "请选择上传文章封面" }]
       },
 
-      article: {},
-      content: "<h2>I am Example</h2>",
-      options: {},
+      article: {
+        content: "<h2>I am Example</h2>",
+        coverImgUrl: ""
+      },
       imageUrl: "",
+      options: {},
       postData: {
         token:
           "aI9GR6VbK_5gu3kwDj-eTFny-1Hi4sucXf5mQkeg:28x3c--LOhWr6E_R2qP9k_njr9I=:eyJzY29wZSI6Imppbmp1bWFvIiwiZGVhZGxpbmUiOjE1MTU4NTc3NTJ9"
@@ -136,7 +139,7 @@ export default {
 
     //获取upload token
     getUploadToken() {
-      QiniuInterface.getUploadToken()
+      QiniuInterface.getUploadToken("2")
         .then(data => {
           this.postData.token = data;
         })
@@ -180,22 +183,35 @@ export default {
     //头像上传成功回调
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
+      this.article.coverImgUrl = res.key;
     },
 
     beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
+      const isJPG =
+        file.type === "image/jpeg" ||
+        file.type === "image/png" ||
+        file.type === "image/gif";
       const isLt2M = file.size / 1024 / 1024 < 2;
-      if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
+      if (!isJPG) {
+        this.$message.error("封面只能上传图片!");
       }
-      return isLt2M;
+      if (!isLt2M) {
+        this.$message.error("封面图片大小不能超过 2MB!");
+      }
+      return isJPG && isLt2M;
     },
 
     //创建文章
     submitArticle(formName) {
-      console.log(this.content);
       this.$refs[formName].validate(valid => {
         if (valid) {
+          MeiwenInterface.createMeiwen(this.article)
+            .then(data => {
+              this.$message.success("发表成功，还要创建一篇吗，加鸡腿哦～");
+            })
+            .catch(reason => {
+              this.$message.error(reason);
+            });
         } else {
           return false;
         }
@@ -203,7 +219,7 @@ export default {
     },
 
     resetArticle() {
-      this.content = "";
+      this.article.content = "";
     }
   }
 };

@@ -5,8 +5,8 @@ const API = '/api';
 export default {
     
     //获取upload token
-    getUploadToken() {
-        return fetch.get(API + '/qiniu/uploadToken').then(response => {
+    getUploadToken(type = "1") {
+        return fetch.get(API + '/qiniu/uploadToken',{type: type}).then(response => {
             if (response.code === 0) {
                 return response.data;
             } else {
