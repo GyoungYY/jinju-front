@@ -1,24 +1,24 @@
 <template>
   <div class="detail-container">
-      <div class="meiwen-container">
-        <h1 class="meiwen-title">{{articleDetail.title}}</h1>
-        <div class="meiwen-author">
+      <div style="margin-right:300px;">
+        <div class="meiwen-container">
+            <h1 class="meiwen-title">{{articleDetail.title}}</h1>
+            <div class="meiwen-author">
             <span style="padding: 0 20px;">时间：{{articleDetail.createTimeShow}}</span>
             <span style="padding: 0 20px;">作者：{{articleDetail.username}}</span>
             <span style="padding: 0 20px;">阅读量：{{articleDetail.browseCount}}</span>
-        </div>
-        <div class="meiwen-summary">
+            </div>
+            <div class="meiwen-summary">
             {{articleDetail.summary}}
-        </div>
-        <div class="ql-container ql-snow">
+            </div>
+            <div class="ql-container ql-snow">
             <div class="ql-editor">
                 <div v-html="articleDetail.content" style=""></div>
             </div>
+            </div>
         </div>
-      </div>
 
         <div class="comment-area">
-
             <div style="margin-bottom:20px;">
                 <el-input type="textarea" v-model="myComment" :rows="4" placeholder="期待你的神评~"
                                   :maxlength="300"></el-input>
@@ -58,6 +58,12 @@
                 :total="total" class="pagination"
                 v-if="commentList.length > 0">
             </el-pagination>
+        </div>
+      </div>
+
+        <div class="rigth-part">
+            <img :src="articleDetail.photoUrl" alt="" class="avatar" @click="gotoUserPage(articleDetail.userId)">
+            <div style="text-align: center;font-size: 18px;color: #f90;">{{articleDetail.username}}</div>
         </div>
   </div>
 </template>
@@ -215,22 +221,28 @@ export default {
         .catch(reason => {
           this.$message.error(reason);
         });
-    }
+    },
+
+        //进入用户个人主页
+    gotoUserPage(id) {
+      this.$router.push({ path: "/index/userPage/" + id });
+    },
   }
 };
 </script>
 
 <style scoped>
 .detail-container {
-  max-width: 1000px;
+  max-width: 1100px;
   min-height: 650px;
   margin: 20px auto;
+  position: relative;
 }
 
 .meiwen-container {
   background-color: #fff;
   margin-bottom: 10px;
-  padding: 0 110px 40px;
+  padding: 0 40px 40px;
 }
 
 .meiwen-title {
@@ -290,6 +302,25 @@ export default {
 .comment-area {
   padding: 20px 10px 20px 50px;
   background-color: #fff;
+}
+
+.rigth-part {
+  background-color: #fff;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 280px;
+  min-height: 400px;
+}
+
+.avatar {
+    width: 80px;
+    height: 80px;
+    border: 1px solid #ddd;
+    border-radius: 40px;
+    display: block;
+    margin: 20px auto 10px;
+    cursor: pointer;
 }
 </style>
 

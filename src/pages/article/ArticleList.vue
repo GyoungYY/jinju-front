@@ -4,7 +4,9 @@
         element-loading-spinner="el-icon-loading"
         element-loading-background="#fff">
         <div class="box-card" v-for="(item,index) in meiwenList" :key="item.index">
-            <div class="box-header" style="display:flex;">
+            <div class="item-content" @click="gotoDetail(item.meiwenId)">
+                <div style="margin-right:200px;min-height:180px;">
+                    <div class="box-header" style="display:flex;">
                 <img :src="item.photoUrl" alt="" style="width: 40px;height: 40px;border-radius:20px;cursor:pointer;" @click="gotoUserPage(item.userId)">
                 <div style="padding-left:10px;">
                     <div style="padding-bottom:3px;">
@@ -12,11 +14,9 @@
                     </div>
                     <span style="color:#aaa;">{{item.createTimeShow}}</span>
                 </div>
-            </div>
-            <div class="item-content" @click="gotoDetail(item.meiwenId)">
-                <div style="padding:20px;margin-right:200px">
-                    <h2 style="margin-top:0;">{{item.title}}</h2>
-                    <div>{{item.summary}}</div>
+                </div>
+                    <h2 style="margin:10px 20px;">{{item.title}}</h2>
+                    <div class="meiwen-summary">{{item.summary}}</div>
                 </div>
                 <img :src="item.coverImgUrl" alt="" class="item-img">
             </div>
@@ -128,7 +128,19 @@ export default {
 
     //进入用户个人主页
     gotoUserPage(id) {
+      this.stopBubble();
       this.$router.push({ path: "/index/userPage/" + id });
+    },
+
+    //阻止冒泡
+    stopBubble(e) {
+      //如果提供了事件对象，则这是一个非IE浏览器
+      if (e && e.stopPropagation) {
+        e.stopPropagation();
+      } else {
+        //否则，我们需要使用IE的方式来取消事件冒泡
+        window.event.cancelBubble = true;
+      }
     }
   }
 };
@@ -165,7 +177,6 @@ export default {
 }
 
 .item-content {
-  margin: 10px 0;
   font-size: 14px;
   line-height: 24px;
   cursor: pointer;
@@ -173,10 +184,19 @@ export default {
   min-height: 160px;
 }
 
+.meiwen-summary {
+  margin: 0 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
 .item-img {
   position: absolute;
   right: 20px;
-  top: 0;
+  top: 15px;
   width: 160px;
   height: 160px;
   border-radius: 4px;
