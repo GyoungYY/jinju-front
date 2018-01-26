@@ -29,7 +29,7 @@
                     </div>
                 </div>
                 <div class="send-div">
-                    <el-input type="textarea" v-model="sendText" :rows="6"></el-input>
+                    <el-input type="textarea" v-model="sendText" :rows="6" @keyup.enter.native="sendMessage()"></el-input>
                     <el-button type="primary" style="float: right;margin-top: 10px;" @click="sendMessage()">发送消息</el-button>
                     <div style="clear: both;"></div>
                 </div>
@@ -109,11 +109,15 @@ export default {
       if (result.type == "2") {
         this.userList = result.userList;
       }
+      setTimeout(function(){
+            $('#messageList').scrollTop( $('#messageList')[0].scrollHeight + 100);
+      },10);
+      
     },
 
     //发送消息
     sendMessage() {
-      if (!this.sendText) {
+      if (!this.sendText.trim()) {
         this.$message.error("请输入要发送的内容");
         return;
       }
