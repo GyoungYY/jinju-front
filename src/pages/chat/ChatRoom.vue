@@ -13,14 +13,19 @@
             </div>
             <div class="message-part">
                 <div class="message-notice" id="messageList">
+
                     <div v-for="item in messageList">
-                        <div>
-                            <img src="../../../static/img/photo0.jpeg" alt="" class="message-photo">
-                            <span>aguang</span>
+                        <div :class="{'self-message' : false}">
+                            <div :class="{'self-username' : false}">
+                                <img src="../../../static/img/photo0.jpeg" alt="" class="message-photo">
+                                <span>aguang</span>
+                            </div>
+                            <div style="clear: both;"></div>
+                            <span class="message-content">
+                            这是一条消息这是一条消息这是一条消息这是一条消息这是一条消息这是一条消息
+                            </span>
                         </div>
-                        <span class="message-content">
-                        这是一条消息
-                    </span>
+                        <div style="clear: both;"></div>
                     </div>
                 </div>
                 <div class="send-div">
@@ -157,25 +162,42 @@
                         username: 'aguang',
                         content: '这是一条消息内容'
                     },
-                ]
+                ],
+
+                websock: null,
             }
         },
 
         mounted() {
             $('#userList').scrollUnique();
             $('#messageList').scrollUnique();
+            this.initWebSocket();
         },
 
         methods: {
 
-            //获取消息列表
-            getMessageList() {
+            //初始化
+            initWebSocket(){
+                const wsUrl = "";
+                this.websock = new WebSocket(wsUrl);
+                this.websock.onmessage = this.getMessageList();  //指定收到服务器数据后的回调函数
+                this.websock.onerror = this.errorShow();  //用于指定报错时的回调函数
+            },
 
+            //获取消息列表
+            getMessageList(e) {
+                let readData = JSON.parse(e.data);
             },
 
             //发送消息
             sendMessage() {
                 this.$message.success('发送成功');
+                this.websock.send(this.sendText);
+            },
+
+            //错误回调函数
+            errorShow(){
+                this.$message.success('webSocket有点问题，您喝杯茶再来试一下～');
             },
         }
     }
@@ -245,6 +267,7 @@
         border: 1px solid #ddd;
         border-radius: 5px;
         margin: 10px 10px 15px 10px;
+        max-width: 300px;
     }
 
     .send-div {
@@ -270,5 +293,14 @@
 
     ::-webkit-scrollbar-thumb:window-inactive {
         background: rgba(255, 0, 0, 0.4);
+    }
+
+    .self-message{
+        float: right;
+    }
+
+    .self-username{
+        float:right;
+        padding-right: 10px;
     }
 </style>
