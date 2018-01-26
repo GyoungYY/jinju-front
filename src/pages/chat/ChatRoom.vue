@@ -182,6 +182,7 @@
 <style scoped>
     .chat-container {
         width: 880px;
+        min-height:700px;
         margin: 30px auto;
         padding: 20px;
         background-color: #fff;
