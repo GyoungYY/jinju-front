@@ -20,12 +20,14 @@
     body {
         margin: 0 auto;
         color: #000;
-        /* background-color: #cf9; */
-        /* background-color: #fff; */
         background-color: #e8e8e8 !important;
     }
 
-    input[type=file]{
+    input[type=file] {
         display: none !important;
+    }
+
+    .el-textarea__inner {
+        color: #000;
     }
 </style>
