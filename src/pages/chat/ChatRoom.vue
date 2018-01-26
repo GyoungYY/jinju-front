@@ -1,31 +1,33 @@
 <template>
-    <div class="chat-container">
-        <div class="user-part">
-            <div class="cur-num">当前在线人数：{{userList.length}}人</div>
-            <div class="user-list" id="userList">
-                <div style="padding-top: 10px;color: #999;">在线列表</div>
-                <div v-for="item in userList" class="user-row">
-                    <img src="../../../static/img/photo0.jpeg" alt="" class="user-photo">
-                    <span>{{item.username}}</span>
+    <div style="min-height: 700px;">
+        <div class="chat-container">
+            <div class="user-part">
+                <div class="cur-num">当前在线人数：{{userList.length}}人</div>
+                <div class="user-list" id="userList">
+                    <div style="padding-top: 10px;color: #999;">在线列表</div>
+                    <div v-for="item in userList" class="user-row">
+                        <img src="../../../static/img/photo0.jpeg" alt="" class="user-photo">
+                        <span>{{item.username}}</span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="message-part">
-            <div class="message-notice" id="messageList">
-                <div v-for="item in messageList">
-                    <div>
-                        <img src="../../../static/img/photo0.jpeg" alt="" class="message-photo">
-                        <span>aguang</span>
-                    </div>
-                    <span class="message-content">
+            <div class="message-part">
+                <div class="message-notice" id="messageList">
+                    <div v-for="item in messageList">
+                        <div>
+                            <img src="../../../static/img/photo0.jpeg" alt="" class="message-photo">
+                            <span>aguang</span>
+                        </div>
+                        <span class="message-content">
                         这是一条消息
                     </span>
+                    </div>
                 </div>
-            </div>
-            <div class="send-div">
-                <el-input type="textarea" v-model="sendText" :rows="6"></el-input>
-                <el-button type="primary" style="float: right;margin-top: 10px;" @click="sendMessage()">发送消息</el-button>
-                <div style="clear: both;"></div>
+                <div class="send-div">
+                    <el-input type="textarea" v-model="sendText" :rows="6"></el-input>
+                    <el-button type="primary" style="float: right;margin-top: 10px;" @click="sendMessage()">发送消息</el-button>
+                    <div style="clear: both;"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -182,7 +184,6 @@
 <style scoped>
     .chat-container {
         width: 880px;
-        min-height:700px;
         margin: 30px auto;
         padding: 20px;
         background-color: #fff;
