@@ -90,6 +90,10 @@ export default {
     this.initWebSocket();
   },
 
+  beforeDestroy(){
+      this.closeConnection();
+  },
+
   methods: {
     //初始化
     initWebSocket() {
