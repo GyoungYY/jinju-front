@@ -93,7 +93,7 @@ export default {
   methods: {
     //初始化
     initWebSocket() {
-      const wsUrl = "ws://bt18088883.iok.la/chatsocket/" + this.userInfo.userId;
+      const wsUrl = "ws://localhost:8888/chatsocket/" + this.userInfo.userId;
       this.websocket = new WebSocket(wsUrl);
       //指定收到服务器数据后的回调函数
       this.websocket.onmessage = event => {
