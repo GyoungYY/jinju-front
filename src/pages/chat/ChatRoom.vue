@@ -15,7 +15,8 @@
                 <div class="message-notice" id="messageList">
 
                     <div v-for="item in messageList">
-                        <div :class="{'self-message' : item.userId == userInfo.userId}">
+                        <div v-if="item.type == 2" style="text-align:center;color:#f90;padding:8px;">{{item.message}}</div>
+                        <div :class="{'self-message' : item.userId == userInfo.userId}" v-if="item.type == 1">
                             <div :class="{'self-username' : item.userId == userInfo.userId}">
                                 <img :src="item.photoUrl" alt="" class="message-photo" @click="gotoUserPage(item.userId)">
                                 <span>{{item.username}}</span>
@@ -80,6 +81,10 @@ export default {
   },
 
   mounted() {
+    if (!this.userInfo) {
+      this.$message.warning("请登录再尝试哦~");
+      return;
+    }
     $("#userList").scrollUnique();
     $("#messageList").scrollUnique();
     this.initWebSocket();
@@ -104,19 +109,21 @@ export default {
     //获取消息列表
     getMessageList(event) {
       let result = JSON.parse(event.data);
-      console.log(result);
       this.messageList.push(result);
       if (result.type == "2") {
         this.userList = result.userList;
       }
-      setTimeout(function(){
-            $('#messageList').scrollTop( $('#messageList')[0].scrollHeight + 100);
-      },10);
-      
+      setTimeout(function() {
+        $("#messageList").scrollTop($("#messageList")[0].scrollHeight + 100);
+      }, 10);
     },
 
     //发送消息
     sendMessage() {
+      if (!this.userInfo) {
+        this.$message.warning("请登录再尝试哦~");
+        return;
+      }
       if (!this.sendText.trim()) {
         this.$message.error("请输入要发送的内容");
         return;
