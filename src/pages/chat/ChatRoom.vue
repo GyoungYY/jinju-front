@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <div class="send-div">
-                    <el-input type="textarea" v-model="sendText" :rows="6" @keyup.enter.native="sendMessage()"></el-input>
+                    <el-input type="textarea" v-model="sendText" :rows="4" @keyup.enter.native="sendMessage()"></el-input>
                     <el-button type="primary" style="float: right;margin-top: 10px;" @click="sendMessage()">发送消息</el-button>
                     <div style="clear: both;"></div>
                 </div>
@@ -93,7 +93,7 @@ export default {
   methods: {
     //初始化
     initWebSocket() {
-      const wsUrl = "ws://localhost:8888/chatsocket/" + this.userInfo.userId;
+      const wsUrl = "ws://bt18088883.iok.la/chatsocket/" + this.userInfo.userId;
       this.websocket = new WebSocket(wsUrl);
       //指定收到服务器数据后的回调函数
       this.websocket.onmessage = event => {
@@ -179,7 +179,7 @@ export default {
 }
 
 .user-list {
-  height: 545px;
+  height: 470px;
   overflow-y: auto;
 }
 
@@ -196,7 +196,7 @@ export default {
 }
 
 .message-notice {
-  height: 400px;
+  height: 360px;
   border: 1px solid #ddd;
   padding: 10px;
   margin-bottom: 15px;
