@@ -261,5 +261,6 @@ export default {
 
 .self-content {
   background-color: lawngreen;
+  float: right;
 }
 </style>
