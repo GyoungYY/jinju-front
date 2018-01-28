@@ -82,7 +82,11 @@ export default {
       messageList: [],
       websock: null,
       userId: "",
-      showHistoryMessage: true
+      showHistoryMessage: true,
+      searchParams: {
+        pageIndex: 1,
+        pageSize: 20
+      }
     };
   },
 
@@ -177,10 +181,13 @@ export default {
 
     //获取历史消息
     getHistoryMessage() {
-      ChatroomInterface.getHistoryMessage(50)
+      ChatroomInterface.getHistoryMessage(this.searchParams)
         .then(data => {
           this.dealHistoryMessage(data);
-          this.showHistoryMessage = false;
+          this.searchParams.pageIndex++;
+          if (data.length < this.searchParams.pageSize) {
+            this.showHistoryMessage = false;
+          }
         })
         .catch(reason => {
           this.$message.error(reason);
@@ -189,13 +196,11 @@ export default {
 
     //处理历史消息
     dealHistoryMessage(data) {
-      for (let i =0; i < data.length; i++) {
+      for (let i = 0; i < data.length; i++) {
         this.messageList.unshift(JSON.parse(data[i]));
       }
-      setTimeout(function() {
-        $("#messageList").scrollTop($("#messageList")[0].scrollHeight);
-      }, 10);
-    }
+    },
+    
   }
 };
 </script>
