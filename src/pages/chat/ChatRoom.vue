@@ -16,13 +16,13 @@
 
                     <div v-for="item in messageList">
                         <div v-if="item.type == 2" style="text-align:center;color:#f90;padding:8px;">{{item.message}}</div>
-                        <div :class="{'self-message' : item.userId == userInfo.userId}" v-if="item.type == 1">
-                            <div :class="{'self-username' : item.userId == userInfo.userId}">
+                        <div :class="{'self-message' : item.userId == userId}" v-if="item.type == 1">
+                            <div :class="{'self-username' : item.userId == userId}">
                                 <img :src="item.photoUrl" alt="" class="message-photo" @click="gotoUserPage(item.userId)">
                                 <span>{{item.username}}</span>
                             </div>
                             <div style="clear: both;"></div>
-                            <span class="message-content" :class="{'self-content': item.userId == userInfo.userId}">
+                            <span class="message-content" :class="{'self-content': item.userId == userId}">
                                 {{item.message}}
                             </span>
                         </div>
@@ -40,6 +40,8 @@
 </template>
 
 <script>
+import ChatroomInterface from "@/interface/ChatroomInterface";
+
 $.fn.scrollUnique = function() {
   return $(this).each(function() {
     var eventType = "mousewheel";
@@ -76,28 +78,45 @@ export default {
       sendText: "",
       userList: [],
       messageList: [],
-      websock: null
+      websock: null,
+      userId: this.userInfo ? this.userInfo.userId : '',
     };
   },
 
   mounted() {
     if (!this.userInfo) {
-      this.$message.warning("请登录再尝试哦~");
-      return;
+      this.getVisitorId();
+    } else {
+      this.initWebSocket(this.userInfo.userId);
     }
     $("#userList").scrollUnique();
     $("#messageList").scrollUnique();
-    this.initWebSocket();
   },
 
-  beforeDestroy(){
+  beforeDestroy() {
+    if (this.websocket) {
       this.closeConnection();
+    }
   },
 
   methods: {
+    //获取游客id
+    getVisitorId() {
+      ChatroomInterface.getVisitorId()
+        .then(data => {
+            this.userId = data;
+          this.initWebSocket(data);
+        })
+        .catch(reason => {
+          this.$message.error(reason);
+        });
+    },
+
     //初始化
-    initWebSocket() {
-      const wsUrl = "ws://101.132.43.21:8888/chatsocket/" + this.userInfo.userId;
+    initWebSocket(userId) {
+        // let kaigeUrl = 'bt18088883.iok.la';
+    //   const wsUrl = "ws://localhost:8888/chatsocket/" + userId;
+      const wsUrl = "ws://101.132.43.21:8888/chatsocket/" + userId;
       this.websocket = new WebSocket(wsUrl);
       //指定收到服务器数据后的回调函数
       this.websocket.onmessage = event => {
@@ -124,15 +143,10 @@ export default {
 
     //发送消息
     sendMessage() {
-      if (!this.userInfo) {
-        this.$message.warning("请登录再尝试哦~");
-        return;
-      }
       if (!this.sendText.trim()) {
         this.$message.error("请输入要发送的内容");
         return;
       }
-      this.$message.success("发送成功");
       this.websocket.send(this.sendText);
       this.sendText = "";
     },
@@ -223,6 +237,7 @@ export default {
   border-radius: 5px;
   margin: 10px 10px 15px 10px;
   max-width: 300px;
+  word-wrap: break-word;
 }
 
 .send-div {
