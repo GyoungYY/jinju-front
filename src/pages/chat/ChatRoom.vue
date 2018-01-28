@@ -6,7 +6,7 @@
                 <div class="user-list" id="userList">
                     <div style="padding-top: 10px;color: #999;">在线列表</div>
                     <div v-for="item in userList" class="user-row">
-                        <img :src="item.photoUrl" alt="" class="user-photo" @click="gotoUserPage(item.userId)">
+                        <img :src="item.photoUrl" alt="" class="user-photo" @click="gotoUserPage(item)">
                         <span>{{item.username}}</span>
                     </div>
                 </div>
@@ -18,7 +18,7 @@
                         <div v-if="item.type == 2" style="text-align:center;color:#f90;padding:8px;">{{item.message}}</div>
                         <div :class="{'self-message' : item.userId == userId}" v-if="item.type == 1">
                             <div :class="{'self-username' : item.userId == userId}">
-                                <img :src="item.photoUrl" alt="" class="message-photo" @click="gotoUserPage(item.userId)">
+                                <img :src="item.photoUrl" alt="" class="message-photo" @click="gotoUserPage(item)">
                                 <span>{{item.username}}</span>
                             </div>
                             <div style="clear: both;"></div>
@@ -79,7 +79,7 @@ export default {
       userList: [],
       messageList: [],
       websock: null,
-      userId: this.userInfo ? this.userInfo.userId : '',
+      userId: this.userInfo ? this.userInfo.userId : ""
     };
   },
 
@@ -104,7 +104,7 @@ export default {
     getVisitorId() {
       ChatroomInterface.getVisitorId()
         .then(data => {
-            this.userId = data;
+          this.userId = data;
           this.initWebSocket(data);
         })
         .catch(reason => {
@@ -114,8 +114,8 @@ export default {
 
     //初始化
     initWebSocket(userId) {
-        // let kaigeUrl = 'bt18088883.iok.la';
-    //   const wsUrl = "ws://localhost:8888/chatsocket/" + userId;
+      // let kaigeUrl = 'bt18088883.iok.la';
+      //   const wsUrl = "ws://localhost:8888/chatsocket/" + userId;
       const wsUrl = "ws://101.132.43.21:8888/chatsocket/" + userId;
       this.websocket = new WebSocket(wsUrl);
       //指定收到服务器数据后的回调函数
@@ -162,8 +162,12 @@ export default {
     },
 
     //进入用户个人主页
-    gotoUserPage(id) {
-      this.$router.push({ path: "/index/userPage/" + id });
+    gotoUserPage(item) {
+      if (item.isVisitor) {
+        this.$message.warning("该用户为游客身份哦~");
+        return;
+      }
+      this.$router.push({ path: "/index/userPage/" + item.userId });
     }
   }
 };
