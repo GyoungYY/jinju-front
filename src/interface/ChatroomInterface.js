@@ -14,4 +14,15 @@ export default {
             }
         })
     },
+
+    //获取历史消息
+    getHistoryMessage(limit) {
+        return fetch.get(API + '/chat/getHistoryMessage' , { limit: limit }).then(response => {
+            if (response.code === 0) {
+                return response.data;
+            } else {
+                return Promise.reject(response.message);
+            }
+        })
+    },
 }

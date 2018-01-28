@@ -13,7 +13,9 @@
             </div>
             <div class="message-part">
                 <div class="message-notice" id="messageList">
-
+                    <div v-if="showHistoryMessage" style="text-align: center;color: #66b1ff;cursor:pointer;" @click="getHistoryMessage()">
+                        <span class="glyphicon glyphicon-time" style="padding-right:4px;"></span>查看更多消息
+                    </div>
                     <div v-for="item in messageList">
                         <div v-if="item.type == 2" style="text-align:center;color:#f90;padding:8px;">{{item.message}}</div>
                         <div :class="{'self-message' : item.userId == userId}" v-if="item.type == 1">
@@ -79,7 +81,8 @@ export default {
       userList: [],
       messageList: [],
       websock: null,
-      userId: ""
+      userId: "",
+      showHistoryMessage: true
     };
   },
 
@@ -139,7 +142,7 @@ export default {
         this.userList = result.userList;
       }
       setTimeout(function() {
-        $("#messageList").scrollTop($("#messageList")[0].scrollHeight + 100);
+        $("#messageList").scrollTop($("#messageList")[0].scrollHeight);
       }, 10);
     },
 
@@ -170,6 +173,28 @@ export default {
         return;
       }
       this.$router.push({ path: "/index/userPage/" + item.userId });
+    },
+
+    //获取历史消息
+    getHistoryMessage() {
+      ChatroomInterface.getHistoryMessage(50)
+        .then(data => {
+          this.dealHistoryMessage(data);
+          this.showHistoryMessage = false;
+        })
+        .catch(reason => {
+          this.$message.error(reason);
+        });
+    },
+
+    //处理历史消息
+    dealHistoryMessage(data) {
+      for (let i = data.length - 1; i >= 0; i--) {
+        this.messageList.unshift(JSON.parse(data[i]));
+      }
+      setTimeout(function() {
+        $("#messageList").scrollTop($("#messageList")[0].scrollHeight);
+      }, 10);
     }
   }
 };
