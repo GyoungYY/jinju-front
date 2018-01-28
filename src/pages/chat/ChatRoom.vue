@@ -189,7 +189,7 @@ export default {
 
     //处理历史消息
     dealHistoryMessage(data) {
-      for (let i = data.length - 1; i >= 0; i--) {
+      for (let i =0; i < data.length; i++) {
         this.messageList.unshift(JSON.parse(data[i]));
       }
       setTimeout(function() {
