@@ -79,7 +79,7 @@ export default {
       userList: [],
       messageList: [],
       websock: null,
-      userId: this.userInfo ? this.userInfo.userId : ""
+      userId: ""
     };
   },
 
@@ -87,6 +87,7 @@ export default {
     if (!this.userInfo) {
       this.getVisitorId();
     } else {
+      this.userId = this.userInfo.userId;
       this.initWebSocket(this.userInfo.userId);
     }
     $("#userList").scrollUnique();
@@ -115,7 +116,7 @@ export default {
     //初始化
     initWebSocket(userId) {
       // let kaigeUrl = 'bt18088883.iok.la';
-      //   const wsUrl = "ws://localhost:8888/chatsocket/" + userId;
+      // const wsUrl = "ws://localhost:8888/chatsocket/" + userId;
       const wsUrl = "ws://101.132.43.21:8888/chatsocket/" + userId;
       this.websocket = new WebSocket(wsUrl);
       //指定收到服务器数据后的回调函数
@@ -132,6 +133,7 @@ export default {
     //获取消息列表
     getMessageList(event) {
       let result = JSON.parse(event.data);
+      console.log(result);
       this.messageList.push(result);
       if (result.type == "2") {
         this.userList = result.userList;
