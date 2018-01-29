@@ -6,16 +6,22 @@
                     <img src="../assets/favicon.jpg" alt="" class="logo">
                     <span style="padding: 0 10px; font-size: 20px;">金句猫</span>
                 </li>
-                <li :class="{'active-tag': $store.state.activeName === 'jinjuList'}" @click="handleSelect('jinjuList')">首页</li>
-                <li :class="{'active-tag': $store.state.activeName === 'articleList'}" @click="handleSelect('articleList')">美文</li>
-                <li :class="{'active-tag': $store.state.activeName === 'chatRoom'}" @click="handleSelect('chatRoom')">聊天室</li>
+                <li :class="{'active-tag': $store.state.activeName === 'jinjuList'}" @click="handleSelect('jinjuList')">
+                    首页
+                </li>
+                <li :class="{'active-tag': $store.state.activeName === 'articleList'}"
+                    @click="handleSelect('articleList')">美文
+                </li>
+                <li :class="{'active-tag': $store.state.activeName === 'chatRoom'}" @click="handleSelect('chatRoom')">
+                    聊天室
+                </li>
 
                 <li style="float: right" v-if="isLogined">
                     <el-dropdown @command="handleCommand">
                         <span class="el-dropdown-link" style="color: #f90;display:inline-block;line-height:64px;">
-                            <img :src="userInfo.photoUrl" alt=""
+                            <img :src="$store.state.userInfo.photoUrl" alt=""
                                  style="width: 30px;height: 30px;border-radius:15px;margin-right:10px;">
-                            {{userInfo.username}}
+                            {{$store.state.userInfo.username}}
                             <i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
@@ -84,7 +90,7 @@
         methods: {
             //选择顶部tab
             handleSelect(key) {
-                this.$store.commit('changeTab',key);
+                this.$store.commit('changeTab', key);
                 if (key === "jinjuList") {
                     this.$router.push({path: "/index/jinjuList"});
                 } else if (key === "articleList") {

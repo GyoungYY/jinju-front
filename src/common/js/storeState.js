@@ -10,12 +10,18 @@ Vue.use(vuex);
  */
 export default new vuex.Store({
     state: {
-        activeName: sessionStorage.getItem("activeName") || "jinjuList"
+        activeName: sessionStorage.getItem("activeName") || "jinjuList",
+        userInfo: JSON.parse(sessionStorage.getItem("userInfo")),
     },
     mutations: {
         changeTab(state, index) {
             state.activeName = index;
             sessionStorage.setItem("activeName", index);
-        }
+        },
+
+        updateUserInfo(state, userInfo) {
+            state.userInfo = userInfo;
+            sessionStorage.setItem("userInfo", JSON.stringify(userInfo));
+        },
     }
 })
