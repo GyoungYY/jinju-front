@@ -6,9 +6,9 @@
                     <img src="../assets/favicon.jpg" alt="" class="logo">
                     <span style="padding: 0 10px; font-size: 20px;">金句猫</span>
                 </li>
-                <li :class="{'active-tag': activeName === 'jinjuList'}" @click="handleSelect('jinjuList')">首页</li>
-                <li :class="{'active-tag': activeName === 'articleList'}" @click="handleSelect('articleList')">美文</li>
-                <li :class="{'active-tag': activeName === 'chatRoom'}" @click="handleSelect('chatRoom')">聊天室</li>
+                <li :class="{'active-tag': $store.state.activeName === 'jinjuList'}" @click="handleSelect('jinjuList')">首页</li>
+                <li :class="{'active-tag': $store.state.activeName === 'articleList'}" @click="handleSelect('articleList')">美文</li>
+                <li :class="{'active-tag': $store.state.activeName === 'chatRoom'}" @click="handleSelect('chatRoom')">聊天室</li>
 
                 <li style="float: right" v-if="isLogined">
                     <el-dropdown @command="handleCommand">
@@ -72,7 +72,6 @@
     export default {
         data() {
             return {
-                activeName: sessionStorage.getItem("activeName") || "jinjuList",
                 userInfo: JSON.parse(sessionStorage.getItem("userInfo")),
                 isLogined: false
             };
@@ -85,8 +84,7 @@
         methods: {
             //选择顶部tab
             handleSelect(key) {
-                sessionStorage.setItem("activeName", key);
-                this.activeName = key;
+                this.$store.commit('changeTab',key);
                 if (key === "jinjuList") {
                     this.$router.push({path: "/index/jinjuList"});
                 } else if (key === "articleList") {
