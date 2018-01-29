@@ -14,11 +14,13 @@ export default new vuex.Store({
         userInfo: JSON.parse(sessionStorage.getItem("userInfo")),
     },
     mutations: {
+        //切换tab
         changeTab(state, index) {
             state.activeName = index;
             sessionStorage.setItem("activeName", index);
         },
 
+        //更新用户信息
         updateUserInfo(state, userInfo) {
             state.userInfo = userInfo;
             sessionStorage.setItem("userInfo", JSON.stringify(userInfo));
