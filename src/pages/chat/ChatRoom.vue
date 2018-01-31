@@ -17,6 +17,7 @@
                         <span class="glyphicon glyphicon-time" style="padding-right:4px;"></span>查看更多消息
                     </div>
                     <div v-for="item in messageList">
+                        <div v-if="item.isShowTime" style="text-align:center;color:#999;padding:8px;">{{item.createTimeShow}}</div>
                         <div v-if="item.type == 2" style="text-align:center;color:#f90;padding:8px;">{{item.message}}</div>
                         <div :class="{'self-message' : item.userId == userId}" v-if="item.type == 1">
                             <div :class="{'self-username' : item.userId == userId}">
@@ -43,6 +44,7 @@
 
 <script>
 import ChatroomInterface from "@/interface/ChatroomInterface";
+import formatTime from "@/common/js/formatTime";
 
 $.fn.scrollUnique = function() {
   return $(this).each(function() {
@@ -84,8 +86,8 @@ export default {
       userId: "",
       showHistoryMessage: true,
       searchParams: {
-        pageIndex: 1,
-        pageSize: 20
+        id: '',
+        limit: 20
       }
     };
   },
@@ -123,7 +125,7 @@ export default {
     //初始化
     initWebSocket(userId) {
       // let kaigeUrl = 'bt18088883.iok.la';
-      // const wsUrl = "ws://localhost:8888/chatsocket/" + userId;
+    //   const wsUrl = "ws://localhost:8888/chatsocket/" + userId;
       const wsUrl = "ws://101.132.43.21:8888/chatsocket/" + userId;
       this.websocket = new WebSocket(wsUrl);
       //指定收到服务器数据后的回调函数
@@ -141,6 +143,7 @@ export default {
     getMessageList(event) {
       let result = JSON.parse(event.data);
       console.log(result);
+      result.createTimeShow = formatTime.getChatTime(result.createTime);
       this.messageList.push(result);
       if (result.type == "2") {
         this.userList = result.userList;
@@ -181,11 +184,11 @@ export default {
 
     //获取历史消息
     getHistoryMessage() {
+        this.searchParams.id = this.messageList[0].id;
       ChatroomInterface.getHistoryMessage(this.searchParams)
         .then(data => {
           this.dealHistoryMessage(data);
-          this.searchParams.pageIndex++;
-          if (data.length < this.searchParams.pageSize) {
+          if (data.length < this.searchParams.limit) {
             this.showHistoryMessage = false;
           }
         })
@@ -197,7 +200,9 @@ export default {
     //处理历史消息
     dealHistoryMessage(data) {
       for (let i = 0; i < data.length; i++) {
-        this.messageList.unshift(JSON.parse(data[i]));
+          let temp = data[i];
+          temp.createTimeShow = formatTime.getChatTime(temp.createTime);
+        this.messageList.unshift(temp);
       }
     },
     
