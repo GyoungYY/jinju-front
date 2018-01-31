@@ -109,7 +109,7 @@ export default new Router({
                 },
 
                 {
-                    path: 'chatRoom',
+                    path: 'chatroom',
                     name: 'ChatRoom',
                     component: ChatRoom
                 },

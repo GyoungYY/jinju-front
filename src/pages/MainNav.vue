@@ -96,7 +96,7 @@
                 } else if (key === "articleList") {
                     this.$router.push({path: "/index/articleList"});
                 } else if (key === "chatRoom") {
-                    this.$router.push({path: "/index/chatRoom"});
+                    this.$router.push({path: "/index/chatroom"});
                 }
             },
 
