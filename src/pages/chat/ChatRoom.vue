@@ -94,7 +94,8 @@
                 searchParams: {
                     id: '',
                     limit: 20
-                }
+                },
+                isFirstGet: true,
             };
         },
 
@@ -154,6 +155,10 @@
                 this.messageList.push(result);
                 if (result.type == "2") {
                     this.userList = result.userList;
+                }
+                if(this.isFirstGet){
+                    this.getHistoryMessage();
+                    this.isFirstGet = false;
                 }
                 setTimeout(function () {
                     $("#messageList").scrollTop($("#messageList")[0].scrollHeight);

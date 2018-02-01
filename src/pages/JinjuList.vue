@@ -197,7 +197,7 @@ export default {
 
 .item-content {
   margin-bottom: 18px;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 24px;
   cursor: pointer;
 }
