@@ -28,26 +28,30 @@
                 </div>
             </div>
 
-            <el-card class="box-card comment-card" v-for="(item,index) in commentList" :key="item.index">
+            <div class="comment-card" v-for="(item,index) in commentList" :key="item.index">
                 <div slot="header" style="display:flex;">
-                    <img :src="item.photoUrl" alt="" style="width: 40px;height: 40px;border-radius:20px;">
+                    <img :src="item.photoUrl" alt="" style="width: 40px;height: 40px;border-radius:20px;cursor:pointer;"
+                         @click="gotoUserPage(item.userId)">
                     <div style="padding-left:20px;">
                         <div style="padding-bottom:3px;">
-                            <span style="padding:0 6px;">#{{total - (commentParams.pageIndex -1)*commentParams.pageSize - index }}</span>
+                            <span
+                                style="padding:0 6px;">#{{total - (commentParams.pageIndex - 1) * commentParams.pageSize - index
+                                }}</span>
                             <span class="item-username">{{item.username}}</span>
                         </div>
                         <span style="color:#aaa;">{{item.createTimeShow}}</span>
                     </div>
                 </div>
-                <div class="item-content">
+                <div class="comment-content">
                     {{item.content}}
                 </div>
                 <div style="height:20px;">
-                    <span :class="{'clicked': item.isUpClicked}" class="glyphicon glyphicon-thumbs-up" style="padding-right:10px;float:right;cursor:pointer;" @click="upVoteComment(item)">
-                        <span style="padding:0 10px;">{{item.upVoteCount}}</span>
+                    <span :class="{'clicked': item.isUpClicked}" class="glyphicon glyphicon-thumbs-up"
+                          style="padding-right:10px;float:right;cursor:pointer;" @click="upVoteComment(item)">
+                        <span style="padding:0 10px;">0</span>
                     </span>
                 </div>
-            </el-card>
+            </div>
 
             <el-pagination
                 background
@@ -95,10 +99,10 @@ export default {
       commentParams: {
         pageIndex: 1,
         pageSize: 10,
-        jinjuId: this.$route.params.id,
+        meiwenId: this.$route.params.id,
         parentId: 0
       },
-      jinjuId: this.$route.params.id
+      meiwenId: this.$route.params.id
     };
   },
   mounted() {
@@ -124,60 +128,13 @@ export default {
       });
     },
 
-    //点击赞按钮
-    upVoteClick(jinjuId) {
-      this.$message.warning("美文暂不支持点赞");
-      return;
-      let type = this.jinjuDetail.upOrDownVote === 1 ? 2 : 1; //1赞，2取消
-      JinjuInterface.upVote(jinjuId, type)
-        .then(data => {
-          this.$message.success(data);
-          this.getMeiwenDetail(this.$route.params.id);
-        })
-        .catch(reason => {
-          this.$message.error(reason);
-        });
-    },
-
-    //点击踩按钮
-    downVoteClick(jinjuId) {
-      this.$message.warning("美文暂不支持点踩");
-      return;
-      let type = this.jinjuDetail.upOrDownVote === 2 ? 2 : 1; //1踩，2取消
-      JinjuInterface.downVote(jinjuId, type)
-        .then(data => {
-          this.$message.success(data);
-          this.getMeiwenDetail(this.$route.params.id);
-        })
-        .catch(reason => {
-          this.$message.error(reason);
-        });
-    },
-
-    //点击收藏
-    collectClick(jinjuId) {
-      this.$message.warning("美文暂不支持收藏");
-      return;
-      let type = this.jinjuDetail.isCollect ? 2 : 1; //1收藏，2取消
-      JinjuInterface.collect(jinjuId, type)
-        .then(data => {
-          this.$message.success(data);
-          this.getMeiwenDetail(this.$route.params.id);
-        })
-        .catch(reason => {
-          this.$message.error(reason);
-        });
-    },
-
     //发表评论
     publishComment() {
       let params = {
-        jinjuId: this.jinjuId,
+        meiwenId: this.meiwenId,
         content: this.myComment
       };
-      this.$message.warning("美文暂不支持评论");
-      return;
-      CommentInterface.createComment(params)
+      MeiwenInterface.createComment(params)
         .then(data => {
           this.$message.success("发表成功");
           this.myComment = "";
@@ -191,7 +148,7 @@ export default {
     //获取评论列表
     getCommentList(page) {
       this.commentParams.pageIndex = page;
-      CommentInterface.getCommentList(this.commentParams)
+      MeiwenInterface.getCommentList(this.commentParams)
         .then(data => {
           this.commentList = data.list.map(item => {
             item.createTimeShow = formatTime.getFormatTime(item.createTime);
@@ -206,6 +163,8 @@ export default {
 
     //评论的点赞、取消
     upVoteComment(item) {
+        this.$message.warning('美文评论暂不支持点赞');
+        return;
       let type = item.isUpClicked ? 2 : 1;
       CommentInterface.upVoteComment(item.id, type)
         .then(data => {
@@ -223,10 +182,10 @@ export default {
         });
     },
 
-        //进入用户个人主页
+    //进入用户个人主页
     gotoUserPage(id) {
       this.$router.push({ path: "/index/userPage/" + id });
-    },
+    }
   }
 };
 </script>
@@ -267,20 +226,10 @@ export default {
   border: none;
 }
 
-.box-card {
-  margin-bottom: 20px;
-}
-
 .item-username {
   font-size: 16px;
   font-weight: bold;
   color: #f90;
-}
-
-.item-content {
-  margin-bottom: 18px;
-  font-size: 14px;
-  line-height: 24px;
 }
 
 .item-tag {
@@ -304,6 +253,19 @@ export default {
   background-color: #fff;
 }
 
+.comment-card {
+  margin-bottom: 20px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #ddd;
+}
+
+.comment-content {
+  padding: 4px 0;
+  font-size: 14px;
+  line-height: 24px;
+  color: #303133;
+}
+
 .rigth-part {
   background-color: #fff;
   position: absolute;
@@ -314,13 +276,13 @@ export default {
 }
 
 .avatar {
-    width: 80px;
-    height: 80px;
-    border: 1px solid #ddd;
-    border-radius: 40px;
-    display: block;
-    margin: 20px auto 10px;
-    cursor: pointer;
+  width: 80px;
+  height: 80px;
+  border: 1px solid #ddd;
+  border-radius: 40px;
+  display: block;
+  margin: 20px auto 10px;
+  cursor: pointer;
 }
 </style>
 
