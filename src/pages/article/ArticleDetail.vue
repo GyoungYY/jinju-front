@@ -11,7 +11,7 @@
             <div class="meiwen-summary">
             {{articleDetail.summary}}
             </div>
-            <div class="ql-container ql-snow">
+            <div class="ql-container ql-snow" style="font-size: 16px;">
             <div class="ql-editor">
                 <div v-html="articleDetail.content" style=""></div>
             </div>
@@ -217,7 +217,7 @@ export default {
 .meiwen-summary {
   padding: 12px 15px;
   background-color: #eee;
-  margin: 10px;
+  margin: 10px 0;
   line-height: 1.8;
   border-radius: 5px;
 }
