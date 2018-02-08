@@ -30,4 +30,8 @@
     .el-textarea__inner {
         color: #000;
     }
+
+    img{
+        max-width:100%;
+    }
 </style>
