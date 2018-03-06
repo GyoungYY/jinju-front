@@ -284,6 +284,8 @@ export default {
   margin: 20px auto 10px;
   cursor: pointer;
 }
+
+
 </style>
 
 

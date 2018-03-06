@@ -34,4 +34,8 @@
     img{
         max-width:100%;
     }
+
+    .ql-align-center{
+        text-align: center;
+    }
 </style>
