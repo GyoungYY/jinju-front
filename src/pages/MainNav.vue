@@ -63,6 +63,12 @@
                     <div>
                         <span>金句猫 ©2017-2018 Designed & Developed by aguang & likai</span>
                     </div>
+                    <div>
+                        <a href="http://www.miitbeian.gov.cn/publish/query/indexFirst.action" target="_blank" style="color: #f7f8fa;">
+                            <img src="../assets/gongxinbu.png" alt="">
+                            <span style="vertical-align: middle;">湘ICP备18003691号-1</span>
+                        </a>
+                    </div>
                 </div>
 
                 <div style="clear:both;"></div>
@@ -206,5 +212,8 @@
         width: 400px;
         margin: 0 20px;
         float: left;
+    }
+    a:hover, a:visited, a:link, a:active {
+        text-decoration: none;
     }
 </style>
