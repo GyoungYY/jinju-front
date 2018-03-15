@@ -42,7 +42,7 @@
         <footer>
             <div class="footer-container">
                 <div class="footer-info">
-                    <div style="font-size: 20px;margin-bottom:10px;">金句猫 - 最专业、最内涵的短句子平台</div>
+                    <div style="font-size: 20px;margin-bottom:10px;">金句猫 - 最专业、最内涵的短内容平台</div>
                     <div>
                         微信：www_jinjumao_club
                         <el-button type="primary" size="small">关注</el-button>
