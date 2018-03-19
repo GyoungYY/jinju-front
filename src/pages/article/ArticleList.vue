@@ -3,8 +3,10 @@
         element-loading-text="拼命加载中"
         element-loading-spinner="el-icon-loading"
         element-loading-background="#fff">
-        <el-card class="box-card" v-for="(item,index) in jinjuList" :key="item.index">
-            <div slot="header" style="display:flex;">
+        <div class="box-card" v-for="(item,index) in meiwenList" :key="item.index">
+            <div class="item-content" @click="gotoDetail(item.meiwenId)">
+                <div style="margin-right:200px;min-height:180px;">
+                    <div class="box-header" style="display:flex;">
                 <img :src="item.photoUrl" alt="" style="width: 40px;height: 40px;border-radius:20px;cursor:pointer;" @click="gotoUserPage(item.userId)">
                 <div style="padding-left:10px;">
                     <div style="padding-bottom:3px;">
@@ -12,26 +14,25 @@
                     </div>
                     <span style="color:#aaa;">{{item.createTimeShow}}</span>
                 </div>
+                </div>
+                    <h2 style="margin:10px 20px;">{{item.title}}</h2>
+                    <div class="meiwen-summary">{{item.summary}}</div>
+                </div>
+                <img :src="item.coverImgUrl" alt="" class="item-img">
             </div>
-            <div class="item-content" @click="gotoDetail(item.jinjuId)">
-                {{item.content}}
-            </div>
-            <div style="color:#999;">
+            <div style="" class="box-footer">
                 <el-tag :type="item.itemTagClass" class="item-tag">{{item.typeShow}}</el-tag>
-                <span :class="{'clicked': item.isCollect}" class="glyphicon glyphicon-star-empty" style="float:right;cursor:pointer;" @click="collectClick(item)">
+                <span :class="{'clicked': item.isCollect}" class="glyphicon glyphicon-star-empty" style="float:right;cursor:pointer;" @click="">
                     <span style="padding:0 10px;">{{item.collectCount}}</span>
                 </span>
-                <span class="glyphicon glyphicon-comment" style="float:right;padding-right:10px;cursor:pointer;" @click="gotoDetail(item.jinjuId)">
+                <span class="glyphicon glyphicon-comment" style="float:right;padding-right:10px;cursor:pointer;" @click="gotoDetail(item.meiwenId)">
                     <span style="padding:0 10px;">{{item.commentCount}}</span>
                 </span>
-                <span :class="{'clicked': item.upOrDownVote === 2}" class="glyphicon glyphicon-thumbs-down" style="float:right;padding-right:10px;cursor:pointer;" @click="downVoteClick(item)">
-                    <span style="padding:0 10px;">{{item.downVoteCount}}</span>
-                </span>
-                <span :class="{'clicked': item.upOrDownVote === 1}" class="glyphicon glyphicon-thumbs-up" style="float:right;padding-right:10px;cursor:pointer;" @click="upVoteClick(item)">
-                    <span style="padding:0 10px;">{{item.upVoteCount}}</span>
+                <span class="glyphicon glyphicon-eye-open" style="float:right;padding-right:10px;cursor:pointer;">
+                    <span style="padding:0 10px;">{{item.browseCount}}</span>
                 </span>
             </div>
-        </el-card>
+        </div>
 
         <el-pagination
             background
@@ -47,6 +48,7 @@
 
 <script>
 import JinjuInterface from "@/interface/JinjuInterface";
+import MeiwenInterface from "@/interface/MeiwenInterface";
 import scrollFunc from "@/common/js/scrollFunc";
 import formatTime from "@/common/js/formatTime";
 
@@ -60,7 +62,7 @@ export default {
         pageSize: 15
       },
       isLoading: false,
-      jinjuList: [],
+      meiwenList: [],
       total: 0,
       typeEnum: {
         1: "搞笑",
@@ -75,16 +77,16 @@ export default {
     };
   },
   mounted() {
-    this.getJinjuList(1);
+    this.getMeiwenList(1);
   },
   methods: {
-    //获取金句列表
-    getJinjuList(page) {
+    //获取美文列表
+    getMeiwenList(page) {
       this.searchParams.pageIndex = page;
       this.isLoading = true;
-      JinjuInterface.getJinjuList(this.searchParams).then(data => {
+      MeiwenInterface.getMeiwenList(this.searchParams).then(data => {
         this.isLoading = false;
-        this.jinjuList = data.list.map(item => {
+        this.meiwenList = data.list.map(item => {
           item.typeShow = this.typeEnum[item.type];
           item.itemTagClass = this.tagClass[item.type];
           item.createTimeShow = formatTime.getFormatTime(item.createTime);
@@ -96,64 +98,13 @@ export default {
 
     //切换页数
     handleCurrentChange(page) {
-      this.getJinjuList(page);
+      this.getMeiwenList(page);
       scrollFunc.gotoTop();
     },
 
     //进入金句详情
     gotoDetail(id) {
-      this.$router.push({ path: "/index/JinjuDetail/" + id });
-    },
-
-    //进入用户个人主页
-    gotoUserPage(id) {
-      this.$router.push({ path: "/index/userPage/" + id });
-    },
-
-    //点击赞按钮
-    upVoteClick(item) {
-      let type = item.upOrDownVote === 1 ? 2 : 1; //1赞，2取消
-      JinjuInterface.upVote(item.jinjuId, type)
-        .then(data => {
-          this.$message.success(data);
-          if (type === 1 && item.upOrDownVote != 2) {
-            item.upVoteCount += 1;
-            item.upOrDownVote = 1;
-          } else if (type === 1 && item.upOrDownVote == 2) {
-            item.upVoteCount += 1;
-            item.downVoteCount -= 1;
-            item.upOrDownVote = 1;
-          } else if (type === 2) {
-            item.upVoteCount -= 1;
-            item.upOrDownVote = "";
-          }
-        })
-        .catch(reason => {
-          this.$message.error(reason);
-        });
-    },
-
-    //点击踩按钮
-    downVoteClick(item) {
-      let type = item.upOrDownVote === 2 ? 2 : 1; //1踩，2取消
-      JinjuInterface.downVote(item.jinjuId, type)
-        .then(data => {
-          this.$message.success(data);
-          if (type === 1 && item.upOrDownVote != 1) {
-            item.downVoteCount += 1;
-            item.upOrDownVote = 2;
-          } else if (type === 1 && item.upOrDownVote == 1) {
-            item.downVoteCount += 1;
-            item.upVoteCount -= 1;
-            item.upOrDownVote = 2;
-          } else if (type === 2) {
-            item.downVoteCount -= 1;
-            item.upOrDownVote = "";
-          }
-        })
-        .catch(reason => {
-          this.$message.error(reason);
-        });
+      this.$router.push({ path: "/index/articleDetail/" + id });
     },
 
     //点击收藏
@@ -173,6 +124,23 @@ export default {
         .catch(reason => {
           this.$message.error(reason);
         });
+    },
+
+    //进入用户个人主页
+    gotoUserPage(id) {
+      this.stopBubble();
+      this.$router.push({ path: "/index/userPage/" + id });
+    },
+
+    //阻止冒泡
+    stopBubble(e) {
+      //如果提供了事件对象，则这是一个非IE浏览器
+      if (e && e.stopPropagation) {
+        e.stopPropagation();
+      } else {
+        //否则，我们需要使用IE的方式来取消事件冒泡
+        window.event.cancelBubble = true;
+      }
     }
   }
 };
@@ -187,6 +155,19 @@ export default {
 
 .box-card {
   margin-bottom: 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid #e6ebf5;
+}
+
+.box-header {
+  padding: 10px 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.box-footer {
+  color: #999;
+  padding: 10px;
 }
 
 .item-username {
@@ -196,10 +177,29 @@ export default {
 }
 
 .item-content {
-  margin-bottom: 18px;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 24px;
   cursor: pointer;
+  position: relative;
+  min-height: 160px;
+}
+
+.meiwen-summary {
+  margin: 0 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.item-img {
+  position: absolute;
+  right: 20px;
+  top: 15px;
+  width: 160px;
+  height: 160px;
+  border-radius: 4px;
 }
 
 .item-tag {

@@ -2,18 +2,26 @@
     <div class="main-nav">
         <header>
             <ul>
-                <li @click="handleSelect('index')">
+                <li @click="handleSelect('jinjuList')">
                     <img src="../assets/favicon.jpg" alt="" class="logo">
                     <span style="padding: 0 10px; font-size: 20px;">金句猫</span>
                 </li>
-                <li class="active-tag" @click="handleSelect('index')">首页</li>
-
+                <li :class="{'active-tag': $store.state.activeName === 'jinjuList'}" @click="handleSelect('jinjuList')">
+                    首页
+                </li>
+                <li :class="{'active-tag': $store.state.activeName === 'articleList'}"
+                    @click="handleSelect('articleList')">美文
+                </li>
+                <li :class="{'active-tag': $store.state.activeName === 'chatRoom'}" @click="handleSelect('chatRoom')">
+                    聊天室
+                </li>
 
                 <li style="float: right" v-if="isLogined">
                     <el-dropdown @command="handleCommand">
-                        <span class="el-dropdown-link" style="color: #f90">
-                            <img :src="userInfo.photoUrl" alt="" style="width: 30px;height: 30px;border-radius:15px;margin-right:10px;">
-                            {{userInfo.username}}
+                        <span class="el-dropdown-link" style="color: #f90;display:inline-block;line-height:64px;">
+                            <img :src="$store.state.userInfo.photoUrl" alt=""
+                                 style="width: 30px;height: 30px;border-radius:15px;margin-right:10px;">
+                            {{$store.state.userInfo.username}}
                             <i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
@@ -34,7 +42,7 @@
         <footer>
             <div class="footer-container">
                 <div class="footer-info">
-                    <div style="font-size: 20px;margin-bottom:10px;">金句猫 - 最专业、最内涵的短句子平台</div>
+                    <div style="font-size: 20px;margin-bottom:10px;">金句猫 - 最专业、最内涵的短内容平台</div>
                     <div>
                         微信：www_jinjumao_club
                         <el-button type="primary" size="small">关注</el-button>
@@ -53,11 +61,17 @@
                         <span @click="gotoAboutPage('friend')" style="cursor:pointer;padding-right: 6px;">友情链接</span>
                     </div>
                     <div>
-                        <span>金句猫 ©2017 Designed & Developed by aguang & likai</span>
+                        <span>金句猫 ©2017-2018 Designed & Developed by aguang & likai</span>
+                    </div>
+                    <div>
+                        <a href="http://www.miitbeian.gov.cn/publish/query/indexFirst.action" target="_blank" style="color: #f7f8fa;">
+                            <img src="../assets/gongxinbu.png" alt="">
+                            <span style="vertical-align: middle;">湘ICP备18003691号-1</span>
+                        </a>
                     </div>
                 </div>
 
-                <div style="clear:both;"></div> 
+                <div style="clear:both;"></div>
             </div>
 
         </footer>
@@ -70,10 +84,9 @@
     export default {
         data() {
             return {
-                userInfo: JSON.parse(sessionStorage.getItem('userInfo')),
-                activeIndex: sessionStorage.getItem('tabActive') || 'index',
-                isLogined: false,
-            }
+                userInfo: JSON.parse(sessionStorage.getItem("userInfo")),
+                isLogined: false
+            };
         },
         mounted() {
             if (this.userInfo) {
@@ -81,75 +94,75 @@
             }
         },
         methods: {
-
             //选择顶部tab
             handleSelect(key) {
-                sessionStorage.setItem('tabActive', key);
-                if (key === 'index') {
-                    this.$router.push({path: '/index/jinjuList'});
+                this.$store.commit('changeTab', key);
+                if (key === "jinjuList") {
+                    this.$router.push({path: "/index/jinjuList"});
+                } else if (key === "articleList") {
+                    this.$router.push({path: "/index/articleList"});
+                } else if (key === "chatRoom") {
+                    this.$router.push({path: "/index/chatroom"});
                 }
             },
 
             //点击头像下拉
             handleCommand(command) {
-                if (command === 'userInfo') {
-                    this.$router.push({path: '/index/userInfo'});
-                } else if (command === 'logout') {
+                if (command === "userInfo") {
+                    this.$router.push({path: "/index/userInfo"});
+                } else if (command === "logout") {
                     this.logout();
                 }
             },
 
             //退出登录
             logout() {
-                sessionStorage.removeItem('userInfo');
-                UserInterface.logout(this.userInfo.userId).then(data => {
-                    this.$message.success('退出成功');
-                this.$router.push({path: '/login'});
-                }).catch(reason => {
-                    this.$message.error(reason);
-                });
+                sessionStorage.removeItem("userInfo");
+                sessionStorage.removeItem("activeName");
+                UserInterface.logout(this.userInfo.userId)
+                    .then(data => {
+                        this.$message.success("退出成功");
+                        this.$router.push({path: "/login"});
+                    })
+                    .catch(reason => {
+                        this.$message.error(reason);
+                    });
             },
 
             //发表
             publishClick() {
-                this.$router.push({path: '/index/publishMain'});
+                this.$router.push({path: "/index/publishMain"});
             },
 
             //进入关于页面
-            gotoAboutPage(index){
-                if(index === 'about'){
-                    this.$router.push({path: '/index/AboutUsNav/AboutUsPage'});
-                } else if(index === 'contact'){
-                    this.$router.push({path: '/index/AboutUsNav/ContactUs'});
-                } else if(index === 'message'){
-                    this.$router.push({path: '/index/AboutUsNav/FeedBack'});
-                } else if(index === 'friend'){
-                    this.$router.push({path: '/index/AboutUsNav/FriendLink'});
+            gotoAboutPage(index) {
+                if (index === "about") {
+                    this.$router.push({path: "/index/AboutUsNav/AboutUsPage"});
+                } else if (index === "contact") {
+                    this.$router.push({path: "/index/AboutUsNav/ContactUs"});
+                } else if (index === "message") {
+                    this.$router.push({path: "/index/AboutUsNav/FeedBack"});
+                } else if (index === "friend") {
+                    this.$router.push({path: "/index/AboutUsNav/FriendLink"});
                 }
-                
             },
 
             //登录/注册
-            gotoLogin(){
-                this.$router.push({path: '/login'});
+            gotoLogin() {
+                this.$router.push({path: "/login"});
             },
 
-            concernWeibo(){
-                window.open('https://weibo.com/6432902837');
+            concernWeibo() {
+                window.open("https://weibo.com/6432902837");
             }
         }
-    }
+    };
 </script>
 
 <style scoped>
-
-    .main-nav {
-
-    }
-
     header {
         line-height: 60px;
-        color: #F7F8FA;
+        color: #f7f8fa;
         background-color: rgb(84, 92, 100);
     }
 
@@ -177,10 +190,8 @@
     }
 
     footer {
-        color: #F7F8FA;
+        color: #f7f8fa;
         background-color: rgb(84, 92, 100);
-        /* background-image: -webkit-linear-gradient(to top, rgb(84, 92, 100), #cf9);
-        background-image: linear-gradient(to top, rgb(84, 92, 100), #cf9); */
     }
 
     .footer-container {
@@ -190,16 +201,19 @@
         line-height: 40px;
     }
 
-    .footer-info{
+    .footer-info {
         width: 400px;
         margin: 0 20px 0 60px;
-        float:left;
+        float: left;
         border-right: 1px solid #ddd;
     }
 
-    .footer-link{
+    .footer-link {
         width: 400px;
         margin: 0 20px;
-        float:left;
+        float: left;
+    }
+    a:hover, a:visited, a:link, a:active {
+        text-decoration: none;
     }
 </style>
