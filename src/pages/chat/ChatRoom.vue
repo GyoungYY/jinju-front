@@ -21,7 +21,7 @@
                         <div v-if="item.isShowTime" style="text-align:center;color:#999;padding:8px;">
                             {{item.createTimeShow}}
                         </div>
-                        <div v-if="item.type == 2" style="text-align:center;color:#f90;padding:8px;">{{item.message}}
+                        <div v-if="item.type == 2" style="text-align:center;color:#f90;padding:8px;" v-html="item.message">
                         </div>
                         <div :class="{'self-message' : item.userId == userId}" v-if="item.type == 1">
                             <div :class="{'self-username' : item.userId == userId}">
@@ -29,8 +29,7 @@
                                 <span>{{item.username}}</span>
                             </div>
                             <div style="clear: both;"></div>
-                            <span class="message-content" :class="{'self-content': item.userId == userId}">
-                                {{item.message}}
+                            <span class="message-content" :class="{'self-content': item.userId == userId}" v-html="item.message">
                             </span>
                         </div>
                         <div style="clear: both;"></div>
@@ -152,6 +151,8 @@
                 let result = JSON.parse(event.data);
                 console.log(result);
                 result.createTimeShow = formatTime.getChatTime(result.createTime);
+                var reg = /(http:\/\/|https:\/\/)((\w|=|\?|\.|\/|&|-|#)+)/g;
+		        result.message = result.message.replace(reg, "<a href='$1$2' target='_blank'>$1$2</a>").replace(/\n/g, "<br />");
                 this.messageList.push(result);
                 if (result.type == "2") {
                     this.userList = result.userList;
@@ -214,6 +215,8 @@
                 for (let i = 0; i < data.length; i++) {
                     let temp = data[i];
                     temp.createTimeShow = formatTime.getChatTime(temp.createTime);
+                    var reg = /(http:\/\/|https:\/\/)((\w|=|\?|\.|\/|&|-|#)+)/g;
+		            temp.message = temp.message.replace(reg, "<a href='$1$2' target='_blank'>$1$2</a>").replace(/\n/g, "<br />");
                     this.messageList.unshift(temp);
                 }
             },
